@@ -1,6 +1,6 @@
-// Footer wordmark (Figma «Footer», 1455:2859): the logo starts broken up by the «Pattern refraction»
+// Footer wordmark (Figma «Footer», 1455:2859): the logo stays broken up by the «Pattern refraction»
 // effect of the first frame (lenticular stripes at 45°, strength −7) and comes together into the clean
-// logo of the second frame as the page is scrolled to the end. Figma runs that effect as a WebGPU
+// logo of the second frame once the page is scrolled all the way to the end. Figma runs that effect as a WebGPU
 // shader; this is the same shader ported to WebGL, so it works in every browser. Without WebGL, or
 // with reduced motion, the static logo from the Home frame stays.
 
@@ -183,46 +183,49 @@ if (footerWordmark && !window.matchMedia('(prefers-reduced-motion: reduce)').mat
     const render = createLogoRefraction(canvas, image);
     if (!render) return;
 
-    // 0 when the logo's top reaches the bottom of the screen, 1 at the end of the page.
-    const progress = () => {
-      const top = footerWordmark.getBoundingClientRect().top + window.scrollY;
-      const start = top - window.innerHeight;
-      const end = document.documentElement.scrollHeight - window.innerHeight;
-      return end > start ? Math.min(1, Math.max(0, (window.scrollY - start) / (end - start))) : 1;
+    // Broken up until the page is scrolled all the way to the end; then it comes together over a
+    // moment, and breaks up again once the page is scrolled back up a little.
+    const ASSEMBLE = 1600; // ms, broken → clean
+    const BREAK = 700; // ms, clean → broken
+    const AWAY = 80; // px back up from the end of the page that undo it
+    const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+
+    let strength = 1; // 1: broken up as in the first frame, 0: the clean logo
+    let target = 1;
+    let from = 1;
+    let start = 0;
+    let duration = 0;
+    let frame = 0;
+
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      strength = from + (target - from) * easeInOut(t);
+      const still = t >= 1;
+      render(strength, still); // light sampling while it moves, full sampling for the last frame
+      frame = still ? 0 : requestAnimationFrame(step);
+    };
+    const animateTo = (value) => {
+      if (value === target) return;
+      from = strength;
+      target = value;
+      start = performance.now();
+      duration = Math.max(1, (value === 0 ? ASSEMBLE : BREAK) * Math.abs(target - from));
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(step);
+    };
+    const check = () => {
+      const fromEnd = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+      if (fromEnd <= 2) animateTo(0);
+      else if (fromEnd > AWAY) animateTo(1);
     };
 
-    let ticking = false;
-    let settleTimer;
-    let lastStrength = -1;
-    const draw = (still) => {
-      const p = progress();
-      const strength = 1 - p * p; // holds the broken-up look longer, comes together towards the end
-      if (!still && Math.abs(strength - lastStrength) < 0.001) return;
-      lastStrength = strength;
-      render(strength, still);
-    };
-    const update = () => {
-      ticking = false;
-      const rect = footerWordmark.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return; // off screen
-      draw(false);
-      // Once scrolling pauses, redraw the frame with full sampling.
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(() => draw(true), 150);
-    };
-    const requestUpdate = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
-    };
-
-    draw(true);
+    render(strength, true);
     footerWordmark.classList.add('is-live');
-    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('scroll', check, { passive: true });
     window.addEventListener('resize', () => {
-      lastStrength = -1;
-      draw(true);
+      if (!frame) render(strength, true);
+      check();
     });
+    check();
   }).catch(() => {});
 }

@@ -184,17 +184,77 @@ if (aboutText) {
   }
 }
 
-// Sections «develop» into place as they scroll into view: headings word by word out of a blur,
-// the other blocks rising in one after another, the dark banners opening out of a slightly inset
-// frame. Each element plays once. The Agents section is left as is (it continues the video's last
-// frame) and so is the About text (it has its own scroll animation).
+// Shared by the section reveals and the hero intro: headings develop word by word out of a blur,
+// other blocks rise in out of a blur. All of it runs from Web Animations with fill: backwards, which
+// holds the first frame through the delay; afterwards each element is back to its own styles, so
+// hovers and transitions are untouched.
+const EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
+const STAGGER = 90; // ms between blocks that come into view together
+const WORD_STAGGER = 40; // ms between the words of a heading
+
+// Wraps every word of the heading's text in an inline-block span (each text run goes into one
+// wrapper span, so a flex heading keeps its spaces). Images inside the heading play as words too.
+const splitWords = (heading) => {
+  const nodes = [];
+  const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    if (node.nodeType === Node.TEXT_NODE ? node.textContent.trim() : node.tagName === 'IMG') nodes.push(node);
+  }
+  const pieces = [];
+  nodes.forEach((node) => {
+    if (node.nodeType !== Node.TEXT_NODE) {
+      pieces.push(node);
+      return;
+    }
+    const run = document.createElement('span');
+    node.textContent.split(/(\s+)/).forEach((part) => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        run.append(part);
+      } else {
+        const word = document.createElement('span');
+        word.className = 'reveal-word';
+        word.textContent = part;
+        run.append(word);
+        pieces.push(word);
+      }
+    });
+    node.replaceWith(run);
+  });
+  return pieces;
+};
+
+const KEYFRAMES = {
+  up: [{ offset: 0, opacity: 0, translate: '0 32px', filter: 'blur(6px)' }],
+  down: [{ offset: 0, opacity: 0, translate: '0 -12px', filter: 'blur(4px)' }],
+  fade: [{ offset: 0, opacity: 0 }],
+  rise: [{ offset: 0, opacity: 0, translate: '0 32px' }],
+  word: [{ offset: 0, opacity: 0, translate: '0 0.3em', filter: 'blur(10px)' }],
+  banner: [
+    { clipPath: 'inset(6% 4% round 16px)', opacity: 0 },
+    { offset: 0.35, opacity: 1 },
+    { clipPath: 'inset(0% 0% round 16px)', opacity: 1 },
+  ],
+};
+
+// Words of one heading, one after another; long texts get a shorter step so they finish in time.
+// Returns when (ms) each word starts.
+const playWords = (words, delay) => {
+  const step = Math.min(WORD_STAGGER, 1000 / words.length);
+  words.forEach((word, i) => word.animate(KEYFRAMES.word, {
+    duration: 1000, delay: delay + i * step, easing: EASE, fill: 'backwards',
+  }));
+  return (word) => delay + words.indexOf(word) * step;
+};
+
+// Sections «develop» into place as they scroll into view: headings word by word, the other blocks
+// rising in one after another, the dark banners opening out of a slightly inset frame. Each element
+// plays once. The Agents section is left as is (it continues the video's last frame).
 if (!reduceMotion && 'IntersectionObserver' in window) {
-  const EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
-  const STAGGER = 90; // ms between blocks that come into view together
-  const WORD_STAGGER = 40; // ms between the words of a heading
 
   // words: heading, split into words · up: block, rises out of a blur · rise: same without the blur
-  // (cards, logos, images) · banner: dark banner, unclips from an inset frame
+  // (cards, logos, images) · fade: opacity only · banner: dark banner, unclips from an inset frame
   const REVEALS = [
     ['.build__banner', 'banner'],
     ['.build__title .tag', 'up'],
@@ -205,7 +265,9 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
     ['.trust__sub', 'up'],
     ['.logo-row img', 'rise'],
     ['.security', 'up'],
+    ['.about__bg', 'fade'],
     ['.about__tag', 'up'],
+    ['.about__text', 'words'], // the words also darken with the scroll (see About above)
     ['.impact__banner', 'banner'],
     ['.impact__top .tag', 'up'],
     ['.impact__titles h2', 'words'],
@@ -232,50 +294,6 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
     ['.footer__logos', 'rise'],
   ];
 
-  // Wraps every word of the heading's text in an inline-block span (each text run goes into one
-  // wrapper span, so a flex heading keeps its spaces). Images inside the heading play as words too.
-  const splitWords = (heading) => {
-    const nodes = [];
-    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      if (node.nodeType === Node.TEXT_NODE ? node.textContent.trim() : node.tagName === 'IMG') nodes.push(node);
-    }
-    const pieces = [];
-    nodes.forEach((node) => {
-      if (node.nodeType !== Node.TEXT_NODE) {
-        pieces.push(node);
-        return;
-      }
-      const run = document.createElement('span');
-      node.textContent.split(/(\s+)/).forEach((part) => {
-        if (!part) return;
-        if (/^\s+$/.test(part)) {
-          run.append(part);
-        } else {
-          const word = document.createElement('span');
-          word.className = 'reveal-word';
-          word.textContent = part;
-          run.append(word);
-          pieces.push(word);
-        }
-      });
-      node.replaceWith(run);
-    });
-    return pieces;
-  };
-
-  const KEYFRAMES = {
-    up: [{ offset: 0, opacity: 0, translate: '0 32px', filter: 'blur(6px)' }],
-    rise: [{ offset: 0, opacity: 0, translate: '0 32px' }],
-    word: [{ offset: 0, opacity: 0, translate: '0 0.3em', filter: 'blur(10px)' }],
-    banner: [
-      { clipPath: 'inset(6% 4% round 16px)', opacity: 0 },
-      { offset: 0.35, opacity: 1 },
-      { clipPath: 'inset(0% 0% round 16px)', opacity: 1 },
-    ],
-  };
-
   const pending = new Map(); // element → { kind, words }
   const vh = window.innerHeight;
   REVEALS.forEach(([selector, kind]) => {
@@ -296,15 +314,15 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
         pending.delete(el);
         observer.unobserve(el);
         const delay = i * STAGGER;
-        // fill: backwards holds the first frame through the delay; afterwards the element is back
-        // to its own styles, so hovers and transitions are untouched.
         if (kind === 'words') {
-          words.forEach((word, j) => word.animate(KEYFRAMES.word, {
-            duration: 1000, delay: delay + j * WORD_STAGGER, easing: EASE, fill: 'backwards',
+          const startOf = playWords(words, delay);
+          // The About underline is drawn under its words, so it fades in together with the first of them.
+          el.querySelectorAll('.about__underline').forEach((line) => line.animate(KEYFRAMES.fade, {
+            duration: 1000, delay: startOf(words.find((word) => line.contains(word))), easing: EASE, fill: 'backwards',
           }));
         } else {
           el.animate(KEYFRAMES[kind], {
-            duration: kind === 'banner' ? 1200 : 1000, delay, easing: EASE, fill: 'backwards',
+            duration: kind === 'banner' || kind === 'fade' ? 1200 : 1000, delay, easing: EASE, fill: 'backwards',
           });
         }
         el.classList.remove('reveal-wait');
@@ -595,6 +613,22 @@ if (siteHeader) {
   update();
 }
 
+// Hero intro, once the loader has opened into the hero: the menu drops in, the title develops word
+// by word, then the lead, the buttons and the figures rise in one after another.
+const playHeroIntro = () => {
+  const inner = hero.querySelector('.hero__inner');
+  const play = (selector, kind, delay, step = STAGGER) => {
+    inner.querySelectorAll(selector).forEach((el, i) => el.animate(KEYFRAMES[kind], {
+      duration: 1000, delay: delay + i * step, easing: EASE, fill: 'backwards',
+    }));
+  };
+  play('.menu__logo, .menu__link, .menu .btn', 'down', 0, 60);
+  playWords(splitWords(inner.querySelector('.hero__title')), 150);
+  play('.hero__lead', 'up', 450);
+  play('.hero__buttons > *', 'up', 560);
+  play('.hero__stats > *', 'up', 650, 70);
+};
+
 // Loader (Figma «Loader»): the first video frame grows with the load progress inside corner
 // brackets, then expands into the hero. Sizes come from the 1440×810 frames: 193×109 at 63%,
 // 621×351 at 100%, then 1317×745 before filling the hero.
@@ -687,7 +721,7 @@ if (loader && document.documentElement.classList.contains('is-loading')) {
     // Hand over to the hero: its copy fades in while the white loader fades out.
     loader.style.display = 'block';
     document.documentElement.classList.remove('is-loading');
-    hero.querySelector('.hero__inner').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: 'ease-out' });
+    playHeroIntro();
     await loader.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-out' }).finished;
     loader.remove();
   };
