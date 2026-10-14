@@ -297,7 +297,7 @@ button {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: label-shimmer 1.8s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  animation: label-shimmer 2.6s cubic-bezier(0.45, 0, 0.2, 1) infinite;
 }
 
 /* Text links switch to Medium on hover, as in the Hover state. */
@@ -324,30 +324,40 @@ button {
   outline-offset: 2px;
 }
 
-/* Green AI icon: on hover the white glow moves from the bottom-right corner to the top edge
-   (Figma Hover icon: ellipse centred at 41.57, 3.68, rotated -144.857°, 60% opacity) and the glyph spins. */
+/* Green AI icon: the square (with its white glow) is one SVG and the glyph is a separate layer
+   centred on it, so the glyph spins in place with a plain CSS rotation in every browser.
+   On hover the glow moves from the bottom-right corner to the top edge (Figma Hover icon: ellipse
+   centred at 41.57, 3.68, rotated -144.857°, 60% opacity). The glow transform is written around the
+   ellipse centre explicitly, so it does not depend on SVG transform-origin support. */
 .ai-icon {
+  position: relative;
   display: block;
   flex: none;
-  overflow: visible;
 }
 
-.ai-icon__glow {
-  transform-box: view-box;
-  transform-origin: 76.5px 46.5px;
-  transition: transform 0.7s cubic-bezier(0.3, 0, 0.2, 1), opacity 0.7s ease;
+.ai-icon__bg {
+  display: block;
 }
 
 .ai-icon__glyph {
-  transform-box: fill-box;
-  transform-origin: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -10px;
   transition: transform 0.8s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.ai-icon__glow {
+  transform-origin: 0 0;
+  transform: translate(76.5px, 46.5px) rotate(0deg) translate(-76.5px, -46.5px);
+  transition: transform 0.7s cubic-bezier(0.3, 0, 0.2, 1), opacity 0.7s ease;
 }
 
 .btn:hover .ai-icon__glow {
   opacity: 0.6;
-  transform: translate(-34.9266px, -42.8205px) rotate(-144.857deg);
+  transform: translate(41.5734px, 3.6795px) rotate(-144.857deg) translate(-76.5px, -46.5px);
 }
+
 .btn:hover .ai-icon__glyph { transform: rotate(360deg); }
 
 @media (prefers-reduced-motion: reduce) {
