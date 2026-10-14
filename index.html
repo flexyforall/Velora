@@ -15,7 +15,7 @@
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/mozilla-headline-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/dm-mono-500-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css?v=20261014-3">
+  <link rel="stylesheet" href="css/styles.css?v=20261014-4">
 </head>
 <body>
 
@@ -63,6 +63,27 @@
     </div>
   </div>
 
+  <!-- Compact header (Figma «menu», type Small): appears once the hero menu is gone. Over the dark
+       banners marked data-header="light" it switches to the white logo and links. -->
+  <div class="site-header">
+    <nav class="site-header__menu" aria-label="Main">
+      <a class="site-header__logo" href="#">
+        <img class="site-header__logo-dark" src="assets/common/logo-full-dark.svg" width="146" height="38" alt="Wedge">
+        <img class="site-header__logo-light" src="assets/common/logo-full.svg" width="146" height="38" alt="">
+      </a>
+      <div class="site-header__right">
+        <div class="menu__links">
+          <a class="menu__link t-body-m" href="#agents"><span class="btn-label">Agents</span></a>
+          <a class="menu__link t-body-m" href="#contact"><span class="btn-label">Contact Us</span></a>
+        </div>
+        <a class="btn btn--white btn--menu" href="#contact">
+          <span class="t-body-m-medium btn-label">Book a Demo</span>
+          <img src="assets/common/arrow-right-dark.svg" width="12" height="12" alt="">
+        </a>
+      </div>
+    </nav>
+  </div>
+
   <!-- Hero: pinned while scrolling scrubs the video from the building into the Agents screen -->
   <div class="intro">
   <header class="hero">
@@ -74,6 +95,16 @@
       <video class="hero__video" muted playsinline preload="auto" data-src="assets/hero/hero-scrub.mp4"></video>
     </div>
     <div class="hero__shade"></div>
+
+    <!-- Shown over the office part of the video (Figma «second», 1057:21749) -->
+    <div class="hero__chapter">
+      <div class="hero__chapter-shade" aria-hidden="true"></div>
+      <div class="hero__chapter-content">
+        <h2 class="hero__chapter-title t-h1">One outcome. Many agents.</h2>
+        <p class="hero__chapter-text t-body-l">Wedge coordinates the work between first contact and a completed workflow.</p>
+      </div>
+    </div>
+    <div class="hero__ticks" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
     <div class="hero__inner">
       <nav class="menu">
@@ -476,7 +507,7 @@
     <!-- Co-development banner -->
     <section class="build">
       <div class="build__inner">
-        <div class="build__banner">
+        <div class="build__banner" data-header="light">
           <div class="build__bg" aria-hidden="true"><img src="assets/build/bg.png" alt=""></div>
           <span class="build__vline build__vline--1" aria-hidden="true"></span>
           <span class="build__vline build__vline--2" aria-hidden="true"></span>
@@ -559,7 +590,7 @@
 
     <!-- Proven impact -->
     <section class="impact">
-      <div class="impact__banner">
+      <div class="impact__banner" data-header="light">
         <div class="impact__top">
           <span class="tag tag--glass t-tag-m"><span class="tag__dot"></span>Live deployment results</span>
           <div class="impact__titles">
@@ -762,7 +793,7 @@
 
     <!-- CTA -->
     <section class="cta" id="contact">
-      <div class="cta__banner">
+      <div class="cta__banner" data-header="light">
         <div class="cta__main">
           <div class="cta__title">
             <p class="cta__eyebrow"><img src="assets/cta/ai.svg" width="16" height="16" alt=""><span>Wedge AI <span class="cta__muted">for</span> Healthcare Organizations</span></p>
@@ -818,6 +849,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=20261014-2" defer></script>
+  <script src="js/main.js?v=20261014-4" defer></script>
 </body>
 </html>

@@ -198,12 +198,42 @@ const OVERLAY_FADE_END = 0.1;
 const VIDEO_END = 0.92;
 const FRAME_WIDTH = 1440;
 
+// Scroll progress → video time in seconds (null: the last frame). The office shot gets a longer
+// stretch of scroll, so «One outcome. Many agents.» (Figma «second», 1057:21749) can be read over it
+// while the progress is inside CHAPTER.
+const TIME_KEYS = [[0, 0], [0.4, 5.3], [0.48, 6.2], [0.72, 7.3], [VIDEO_END, null]];
+const CHAPTER = [0.47, 0.73];
+
 // Browsers without H.264 (some Linux Chromium builds) keep the static hero.
 const canPlayVideo = video?.canPlayType('video/mp4; codecs="avc1.640033"') !== '';
 
 if (video && canPlayVideo && !reduceMotion) {
   let targetTime = 0;
   let ticking = false;
+  const ticks = [...hero.querySelectorAll('.hero__ticks span')];
+  let currentTick = -1;
+
+  const timeAt = (progress, duration) => {
+    const end = duration - 0.02; // just short of the end, so the final frame stays on screen
+    const keys = TIME_KEYS.map(([at, time]) => [at, Math.min(time ?? end, end)]);
+    if (progress >= keys[keys.length - 1][0]) return end;
+    let i = 0;
+    while (progress > keys[i + 1][0]) i += 1;
+    const [fromAt, fromTime] = keys[i];
+    const [toAt, toTime] = keys[i + 1];
+    return fromTime + ((toTime - fromTime) * (progress - fromAt)) / (toAt - fromAt);
+  };
+
+  const setTick = (index) => {
+    if (index === currentTick) return;
+    currentTick = index;
+    ticks.forEach((tick, i) => {
+      tick.classList.toggle('is-current', i === index);
+      tick.classList.toggle('is-near', Math.abs(i - index) === 1);
+      tick.classList.toggle('is-next', i === index + 2);
+      tick.classList.toggle('is-ahead', i > index + 2);
+    });
+  };
 
   const seek = () => {
     if (!video.duration || video.seeking) return;
@@ -224,14 +254,16 @@ if (video && canPlayVideo && !reduceMotion) {
 
     hero.style.setProperty('--overlay', String(Math.max(0, 1 - progress / OVERLAY_FADE_END)));
     hero.classList.toggle('is-overlay-hidden', progress >= OVERLAY_FADE_END);
+    hero.classList.toggle('is-chapter', progress >= CHAPTER[0] && progress < CHAPTER[1]);
+    hero.classList.toggle('is-ticks', progress >= OVERLAY_FADE_END && progress < VIDEO_END);
+    setTick(Math.round(Math.min(1, progress / VIDEO_END) * (ticks.length - 1)));
     const isDone = distance > 0 && scrolled >= distance - 0.5;
     // The video ends on the Gaia slide, so scrolling back into it brings the tabs back to Gaia.
     if (!isDone && intro.classList.contains('is-done')) selectAgent(0);
     intro.classList.toggle('is-done', isDone);
 
     if (video.duration) {
-      // Stop just short of the end so the final frame stays on screen.
-      targetTime = Math.min(1, progress / VIDEO_END) * (video.duration - 0.02);
+      targetTime = timeAt(progress, video.duration);
       seek();
     }
   };
@@ -246,6 +278,7 @@ if (video && canPlayVideo && !reduceMotion) {
   // Without the video there is nothing to scrub: fall back to the static hero.
   const disableScrub = () => {
     intro.classList.remove('is-scrub', 'is-done');
+    hero.classList.remove('is-chapter', 'is-ticks');
     window.removeEventListener('scroll', requestUpdate);
     window.removeEventListener('resize', requestUpdate);
     video.remove();
@@ -278,6 +311,40 @@ if (video && canPlayVideo && !reduceMotion) {
       loadProgress.video = 1;
       disableScrub();
     });
+
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+  update();
+}
+
+// Compact header: appears once the hero menu is gone (faded out by the scrub, or scrolled past),
+// and turns white while a dark banner (data-header="light") is behind the middle of the bar.
+const siteHeader = document.querySelector('.site-header');
+
+if (siteHeader) {
+  const bar = siteHeader.querySelector('.site-header__menu');
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    const isScrub = intro?.classList.contains('is-scrub');
+    const threshold = isScrub
+      ? intro.offsetTop + (intro.offsetHeight - hero.offsetHeight) * OVERLAY_FADE_END
+      : 70;
+    siteHeader.classList.toggle('is-visible', window.scrollY > threshold);
+
+    const rect = bar.getBoundingClientRect();
+    const behind = document.elementsFromPoint(window.innerWidth / 2, rect.top + rect.height / 2)
+      .find((el) => !siteHeader.contains(el));
+    siteHeader.classList.toggle('is-light', Boolean(behind?.closest('[data-header="light"]')));
+  };
+
+  const requestUpdate = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  };
 
   window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', requestUpdate);
