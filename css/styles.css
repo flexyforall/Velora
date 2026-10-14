@@ -252,6 +252,111 @@ button {
 .link--light { color: var(--text-primary); }
 .link--dark { color: var(--text-primary-inverted); }
 
+/* ---------- hovers (Figma «buttonPrimary» Hover/Pressed states, 1262:2956) ---------- */
+
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Label shimmer: the Figma hover gradient (solid → fades out around 68% → solid) runs across the
+   text left to right while the button is hovered. The image is 3× the label: solid | dip | solid. */
+.btn-label {
+  --label: 17, 17, 17;
+  transition: font-weight 0.2s ease;
+}
+
+.btn--dark .btn-label,
+.btn--glass .btn-label,
+.link--light .btn-label {
+  --label: 255, 255, 255;
+}
+
+@keyframes label-shimmer {
+  0% { background-position: 100% 0; }
+  65%,
+  100% { background-position: 0 0; }
+}
+
+.btn:hover .btn-label,
+.link:hover .btn-label,
+.big-btn:hover .btn-label {
+  background-image: linear-gradient(90deg,
+    rgba(var(--label), 1) 0%,
+    rgba(var(--label), 1) 33.33%,
+    rgba(var(--label), 0.26) 51.25%,
+    rgba(var(--label), 0) 55.99%,
+    rgba(var(--label), 0.148) 59.75%,
+    rgba(var(--label), 0.9) 65.92%,
+    rgba(var(--label), 1) 66.67%,
+    rgba(var(--label), 1) 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: label-shimmer 1.8s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+
+/* Text links switch to Medium on hover, as in the Hover state. */
+.link:hover .btn-label { font-weight: 500; }
+
+.btn,
+.big-btn {
+  transition: background-color 0.3s ease, transform 0.15s ease;
+}
+
+.btn--glass:hover { background-color: var(--bg-glass-hover); }
+
+.btn:active,
+.big-btn:active { transform: scale(0.97); }
+
+.menu__link { transition: color 0.2s ease; }
+.menu__link:hover { color: var(--text-primary); }
+
+.btn:focus-visible,
+.link:focus-visible,
+.big-btn:focus-visible,
+.menu__link:focus-visible {
+  outline: 2px solid var(--bg-accent-light);
+  outline-offset: 2px;
+}
+
+/* Green AI icon: on hover the white glow moves from the bottom-right corner to the top edge
+   (Figma Hover icon: ellipse centred at 41.57, 3.68, rotated -144.857°, 60% opacity) and the glyph spins. */
+.ai-icon {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.ai-icon__glow {
+  transform-box: view-box;
+  transform-origin: 76.5px 46.5px;
+  transition: transform 0.7s cubic-bezier(0.3, 0, 0.2, 1), opacity 0.7s ease;
+}
+
+.ai-icon__glyph {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.8s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.btn:hover .ai-icon__glow {
+  opacity: 0.6;
+  transform: translate(-34.9266px, -42.8205px) rotate(-144.857deg);
+}
+.btn:hover .ai-icon__glyph { transform: rotate(360deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover .btn-label,
+  .link:hover .btn-label,
+  .big-btn:hover .btn-label { animation: none; }
+  .btn:hover .ai-icon__glyph { transform: none; }
+}
+
 /* ---------- loader (Figma «Loader», 1444:2692) ---------- */
 
 .loader { display: none; }
