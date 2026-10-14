@@ -48,7 +48,7 @@ agentTabs.forEach((tab, i) => {
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // About: as the text scrolls up the screen its muted words darken one by one (Figma «about»,
-// 1450:2727), then the key phrase gets underlined.
+// 1450:2727); under the key phrase the underline grows together with the words being filled.
 const aboutText = document.querySelector('.about__text');
 
 if (aboutText) {
@@ -75,25 +75,69 @@ if (aboutText) {
     node.replaceWith(fragment);
   });
   const words = [...muted.querySelectorAll('span:not(.about__underline)')];
+  const phraseWords = [...underline.querySelectorAll('span')];
+  const firstPhraseWord = words.indexOf(phraseWords[0]);
 
-  const WORDS_END = 0.85; // share of the progress spent on the words; the rest draws the underline
+  // The underline is one background running through the phrase's line fragments laid end to end.
+  // For each phrase word store where its stretch of that strip starts and ends (the stretch
+  // includes the space before it), so the line can follow the word being filled.
+  let stretches = [];
+  const measure = () => {
+    const lines = [...underline.getClientRects()];
+    const lineStart = [];
+    let length = 0;
+    lines.forEach((rect, i) => {
+      lineStart[i] = length;
+      length += rect.width;
+    });
+    const along = (rect) => {
+      const middle = rect.top + rect.height / 2;
+      const i = Math.max(0, lines.findIndex((line) => middle >= line.top && middle <= line.bottom));
+      return lineStart[i] + rect.right - lines[i].left;
+    };
+    let previousEnd = 0;
+    stretches = phraseWords.map((word) => {
+      const end = along(word.getBoundingClientRect());
+      const stretch = [previousEnd, end];
+      previousEnd = end;
+      return stretch;
+    });
+  };
+
   const shown = new Array(words.length).fill(-1);
+  let progress = 0;
 
-  const render = (progress) => {
-    const wordProgress = Math.min(1, progress / WORDS_END) * words.length;
+  const render = () => {
+    const filled = progress * words.length; // how many words are dark, fractional
     words.forEach((word, i) => {
-      const t = Math.round(Math.min(1, Math.max(0, wordProgress - i)) * 100) / 100;
+      const t = Math.round(Math.min(1, Math.max(0, filled - i)) * 100) / 100;
       if (t !== shown[i]) {
         shown[i] = t;
         word.style.color = `rgba(17, 17, 17, ${0.5 + 0.5 * t})`;
       }
     });
-    const line = Math.min(1, Math.max(0, (progress - WORDS_END) / (1 - WORDS_END)));
-    underline.style.setProperty('--underline', `${line * 100}%`);
+
+    const inPhrase = filled - firstPhraseWord;
+    let length = 0;
+    if (inPhrase >= stretches.length) {
+      length = stretches[stretches.length - 1]?.[1] ?? 0;
+    } else if (inPhrase > 0) {
+      const [from, to] = stretches[Math.floor(inPhrase)];
+      length = from + (to - from) * (inPhrase % 1);
+    }
+    underline.style.setProperty('--underline', `${length}px`);
   };
 
+  const remeasure = () => {
+    measure();
+    render();
+  };
+  document.fonts.ready.then(remeasure);
+  window.addEventListener('resize', remeasure);
+
   if (reduceMotion) {
-    render(1);
+    progress = 1;
+    remeasure();
   } else {
     // Starts when the text's top reaches 80% of the screen height, ends at 30%.
     let ticking = false;
@@ -101,7 +145,8 @@ if (aboutText) {
       ticking = false;
       const vh = window.innerHeight;
       const top = aboutText.getBoundingClientRect().top;
-      render(Math.min(1, Math.max(0, (vh * 0.8 - top) / (vh * 0.5))));
+      progress = Math.min(1, Math.max(0, (vh * 0.8 - top) / (vh * 0.5)));
+      render();
     };
     const requestUpdate = () => {
       if (!ticking) {
@@ -111,6 +156,7 @@ if (aboutText) {
     };
     window.addEventListener('scroll', requestUpdate, { passive: true });
     window.addEventListener('resize', requestUpdate);
+    remeasure();
     update();
   }
 }
