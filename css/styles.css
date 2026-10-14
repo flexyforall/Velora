@@ -1451,6 +1451,13 @@ html.is-loading .loader {
 
 .about__muted { color: rgba(17, 17, 17, 0.5); }
 
+/* Scroll reveal (js/main.js): muted words darken one by one, then this phrase gets underlined.
+   The underline is drawn as a background so it can grow across the lines; position and thickness
+   match the font's own underline (from-font) at 48px. */
+.about__underline {
+  background: linear-gradient(var(--text-primary-inverted), var(--text-primary-inverted)) 0 47px / var(--underline, 0%) 2px no-repeat;
+}
+
 /* ---------- proven impact ---------- */
 
 .impact {

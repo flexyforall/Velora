@@ -45,6 +45,76 @@ agentTabs.forEach((tab, i) => {
   });
 });
 
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// About: as the text scrolls up the screen its muted words darken one by one (Figma «about»,
+// 1450:2727), then the key phrase gets underlined.
+const aboutText = document.querySelector('.about__text');
+
+if (aboutText) {
+  const muted = aboutText.querySelector('.about__muted');
+  const underline = aboutText.querySelector('.about__underline');
+
+  // Wrap every word of the muted part in a span, keeping the spaces as they are.
+  const walker = document.createTreeWalker(muted, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  textNodes.forEach((node) => {
+    const parts = node.textContent.split(/(\s+)/);
+    const fragment = document.createDocumentFragment();
+    parts.forEach((part) => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        fragment.append(part);
+      } else {
+        const word = document.createElement('span');
+        word.textContent = part;
+        fragment.append(word);
+      }
+    });
+    node.replaceWith(fragment);
+  });
+  const words = [...muted.querySelectorAll('span:not(.about__underline)')];
+
+  const WORDS_END = 0.85; // share of the progress spent on the words; the rest draws the underline
+  const shown = new Array(words.length).fill(-1);
+
+  const render = (progress) => {
+    const wordProgress = Math.min(1, progress / WORDS_END) * words.length;
+    words.forEach((word, i) => {
+      const t = Math.round(Math.min(1, Math.max(0, wordProgress - i)) * 100) / 100;
+      if (t !== shown[i]) {
+        shown[i] = t;
+        word.style.color = `rgba(17, 17, 17, ${0.5 + 0.5 * t})`;
+      }
+    });
+    const line = Math.min(1, Math.max(0, (progress - WORDS_END) / (1 - WORDS_END)));
+    underline.style.setProperty('--underline', `${line * 100}%`);
+  };
+
+  if (reduceMotion) {
+    render(1);
+  } else {
+    // Starts when the text's top reaches 80% of the screen height, ends at 30%.
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      const top = aboutText.getBoundingClientRect().top;
+      render(Math.min(1, Math.max(0, (vh * 0.8 - top) / (vh * 0.5))));
+    };
+    const requestUpdate = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    update();
+  }
+}
+
 // Load progress shown by the loader: 0..1 per resource. The video entry is reset to 0 only when
 // the scrub actually loads it.
 const loadProgress = { fonts: 0, poster: 0, video: 1 };
@@ -75,7 +145,6 @@ const fetchBlob = async (url, onProgress) => {
 const intro = document.querySelector('.intro');
 const hero = intro?.querySelector('.hero');
 const video = hero?.querySelector('.hero__video');
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Share of the scroll distance that fades out the hero copy, and the share after which
 // the video holds its final frame before the handoff.
