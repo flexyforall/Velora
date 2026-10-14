@@ -353,7 +353,9 @@ button {
   top: 50%;
   left: 50%;
   margin: -10px 0 0 -10px;
-  transition: transform 0.8s cubic-bezier(0.45, 0, 0.2, 1);
+  /* A slow third of a turn: the glyph has three arcs, so it comes to rest in nearly the same pose.
+     Soft start and a long, gentle stop. */
+  transition: transform 1.6s cubic-bezier(0.35, 0, 0.15, 1);
 }
 
 .ai-icon__glow {
@@ -367,7 +369,7 @@ button {
   transform: translate(41.5734px, 3.6795px) rotate(-144.857deg) translate(-76.5px, -46.5px);
 }
 
-.btn:hover .ai-icon__glyph { transform: rotate(360deg); }
+.btn:hover .ai-icon__glyph { transform: rotate(120deg); }
 
 @media (prefers-reduced-motion: reduce) {
   .btn:hover .btn-label,
