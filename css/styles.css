@@ -262,6 +262,68 @@ button {
   object-fit: cover;
 }
 
+.hero__video { opacity: 0; }
+.hero.is-video-ready .hero__video { opacity: 1; }
+
+/* Scroll scrub (enabled from JS): the hero stays pinned for --scrub-distance while the video plays
+   frame by frame; its last frame is the Agents section, which then takes over in the same spot. */
+.intro {
+  --scrub-distance: 300vh;
+  position: relative;
+  background: var(--bg-accent-dark);
+}
+
+.intro.is-scrub { height: calc(810px + var(--scrub-distance)); }
+
+.intro.is-scrub .hero {
+  position: sticky;
+  top: 0;
+  /* Seen only beside the video on screens wider than 1440 while the last frame settles:
+     replicates the Agents section outside its 1440px frame (dark, white panel from y=30 on the right). */
+  background:
+    linear-gradient(#fff, #fff) right 0 top 30px / max(0px, calc((100% - var(--frame)) / 2)) 800px no-repeat,
+    var(--bg-accent-dark);
+}
+
+/* The video frame maps 1:1 onto the 1440×810 layout, so its last frame lands exactly on the Agents
+   section. Wider screens start scaled to cover and settle to scale 1 at the end (--video-scale). */
+.intro.is-scrub .hero__media {
+  top: 0;
+  height: 810px;
+}
+
+.intro.is-scrub .hero__poster,
+.intro.is-scrub .hero__video {
+  left: max(0px, calc((100% - var(--frame)) / 2));
+  width: var(--frame);
+  height: 810px;
+  object-fit: fill;
+  transform: scale(var(--video-scale, 1));
+  transform-origin: 50% 50%;
+}
+
+.intro.is-scrub .hero__shade,
+.intro.is-scrub .hero__inner {
+  opacity: var(--overlay, 1);
+}
+
+.intro.is-scrub .hero.is-overlay-hidden .hero__inner {
+  visibility: hidden;
+}
+
+.intro.is-scrub + main .agents {
+  margin-top: -810px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.intro.is-scrub.is-done + main .agents {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0s;
+}
+
 .hero__shade {
   position: absolute;
   inset: 0;
@@ -484,6 +546,13 @@ button {
   overflow: hidden;
   border-top-left-radius: 12px;
   background: var(--bg-primary);
+}
+
+/* Content stays on the 1440 grid; on wider screens only the white panel extends to the edge. */
+.agents__panel-inner {
+  position: relative;
+  width: min(100%, 1114px);
+  height: 100%;
 }
 
 .agents__illustration {
@@ -1557,5 +1626,4 @@ button.faq-item__q { cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero__video { display: none; }
 }

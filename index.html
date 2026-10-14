@@ -12,14 +12,15 @@
 </head>
 <body>
 
-  <!-- Hero -->
+  <!-- Hero: pinned while scrolling scrubs the video from the building into the Agents screen -->
+  <div class="intro">
   <header class="hero">
     <div class="hero__media" aria-hidden="true">
-      <img class="hero__poster" src="assets/hero/hero-bg.png" alt="">
-      <video class="hero__video" autoplay muted loop playsinline preload="auto">
-        <source src="assets/hero/hero-bg.webm" type="video/webm">
-        <source src="assets/hero/hero-bg.mp4" type="video/mp4">
-      </video>
+      <picture>
+        <source media="(prefers-reduced-motion: reduce)" srcset="assets/hero/hero-bg.png">
+        <img class="hero__poster" src="assets/hero/hero-poster.jpg" alt="">
+      </picture>
+      <video class="hero__video" muted playsinline preload="auto" data-src="assets/hero/hero-scrub.mp4"></video>
     </div>
     <div class="hero__shade"></div>
 
@@ -81,6 +82,7 @@
       </ul>
     </div>
   </header>
+  </div>
 
   <main>
     <!-- Agents -->
@@ -99,75 +101,77 @@
       </div>
 
       <div class="agents__panel">
-        <div class="agents__illustration" aria-hidden="true">
-          <img src="assets/agents/gaia-platform-1.png" alt="">
-        </div>
-        <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-        <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
+        <div class="agents__panel-inner">
+          <div class="agents__illustration" aria-hidden="true">
+            <img src="assets/agents/gaia-platform-1.png" alt="">
+          </div>
+          <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
+          <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
 
-        <div class="agents__top">
-          <div class="agents__title">
-            <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Medicaid and Medi-Cal</span>
-            <h2 class="t-h3">Keep eligible<br>patients covered.</h2>
+          <div class="agents__top">
+            <div class="agents__title">
+              <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Medicaid and Medi-Cal</span>
+              <h2 class="t-h3">Keep eligible<br>patients covered.</h2>
+            </div>
+            <div class="agents__body">
+              <p class="t-body-m">Gaia runs outreach, application completion and follow-up through enrollment and renewal.</p>
+              <a class="btn btn--dark btn--icon btn--icon-sm" href="#contact">
+                <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
+                <span class="btn__text">
+                  <span class="t-body-m-medium">Explore Gaia</span>
+                  <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
+                </span>
+                <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
+              </a>
+            </div>
           </div>
-          <div class="agents__body">
-            <p class="t-body-m">Gaia runs outreach, application completion and follow-up through enrollment and renewal.</p>
-            <a class="btn btn--dark btn--icon btn--icon-sm" href="#contact">
-              <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
-              <span class="btn__text">
-                <span class="t-body-m-medium">Explore Gaia</span>
-                <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
-              </span>
-              <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
-            </a>
-          </div>
-        </div>
 
-        <div class="flow-card">
-          <div class="flow-card__steps">
-            <div class="flow-step">
-              <img src="assets/agents/check.svg" width="16" height="16" alt="">
-              <span class="flow-step__label">Eligible Patients</span>
-              <span class="flow-step__status">Renewal due in 30 days</span>
+          <div class="flow-card">
+            <div class="flow-card__steps">
+              <div class="flow-step">
+                <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                <span class="flow-step__label">Eligible Patients</span>
+                <span class="flow-step__status">Renewal due in 30 days</span>
+              </div>
+              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+              <div class="flow-step">
+                <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                <span class="flow-step__label">Reached</span>
+                <span class="flow-step__status">Outreach via SMS</span>
+              </div>
+              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+              <div class="flow-step">
+                <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                <span class="flow-step__label">Application Started</span>
+                <span class="flow-step__status">Initialized</span>
+              </div>
+              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+              <div class="flow-step">
+                <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                <span class="flow-step__label">Application Completed</span>
+                <span class="flow-step__status">Submitted</span>
+              </div>
+              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+              <div class="flow-step">
+                <span class="flow-step__loading"><img src="assets/agents/loading.svg" alt=""></span>
+                <span class="flow-step__label">Coverage Retained</span>
+                <span class="flow-step__status flow-step__status--done">Renewed</span>
+              </div>
             </div>
-            <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-            <div class="flow-step">
-              <img src="assets/agents/check.svg" width="16" height="16" alt="">
-              <span class="flow-step__label">Reached</span>
-              <span class="flow-step__status">Outreach via SMS</span>
-            </div>
-            <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-            <div class="flow-step">
-              <img src="assets/agents/check.svg" width="16" height="16" alt="">
-              <span class="flow-step__label">Application Started</span>
-              <span class="flow-step__status">Initialized</span>
-            </div>
-            <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-            <div class="flow-step">
-              <img src="assets/agents/check.svg" width="16" height="16" alt="">
-              <span class="flow-step__label">Application Completed</span>
-              <span class="flow-step__status">Submitted</span>
-            </div>
-            <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-            <div class="flow-step">
-              <span class="flow-step__loading"><img src="assets/agents/loading.svg" alt=""></span>
-              <span class="flow-step__label">Coverage Retained</span>
-              <span class="flow-step__status flow-step__status--done">Renewed</span>
-            </div>
-          </div>
-          <img class="flow-card__line" src="assets/agents/line73.svg" width="364" height="1" alt="">
-          <div class="flow-card__metrics">
-            <div class="metric metric--first">
-              <span class="metric__value">400%</span>
-              <span class="metric__label">Enrollment Capacity<br>Increased</span>
-            </div>
-            <div class="metric">
-              <span class="metric__value">+60%</span>
-              <span class="metric__label">Month-to-Month <br>Enrollment Growth</span>
-            </div>
-            <div class="metric">
-              <span class="metric__value">&gt;70%</span>
-              <span class="metric__label">Staff Workload Reduced</span>
+            <img class="flow-card__line" src="assets/agents/line73.svg" width="364" height="1" alt="">
+            <div class="flow-card__metrics">
+              <div class="metric metric--first">
+                <span class="metric__value">400%</span>
+                <span class="metric__label">Enrollment Capacity<br>Increased</span>
+              </div>
+              <div class="metric">
+                <span class="metric__value">+60%</span>
+                <span class="metric__label">Month-to-Month <br>Enrollment Growth</span>
+              </div>
+              <div class="metric">
+                <span class="metric__value">&gt;70%</span>
+                <span class="metric__label">Staff Workload Reduced</span>
+              </div>
             </div>
           </div>
         </div>
