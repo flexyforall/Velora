@@ -357,17 +357,22 @@ const intro = document.querySelector('.intro');
 const hero = intro?.querySelector('.hero');
 const video = hero?.querySelector('.hero__video');
 
-// Share of the scroll distance that fades out the hero copy, and the share after which
-// the video holds its final frame before the handoff.
+// Share of the scroll distance that fades out the hero copy.
 const OVERLAY_FADE_END = 0.1;
-const VIDEO_END = 0.92;
 const FRAME_WIDTH = 1440;
 
 // Scroll progress → video time in seconds (null: the last frame). The office shot gets a longer
 // stretch of scroll, so «One outcome. Many agents.» (Figma «second», 1057:21749) can be read over it
-// while the progress is inside CHAPTER.
-const TIME_KEYS = [[0, 0], [0.4, 5.3], [0.48, 6.2], [0.72, 7.3], [VIDEO_END, null]];
-const CHAPTER = [0.47, 0.73];
+// while the progress is inside CHAPTER. The video reaches its last frame exactly where the scrub
+// ends, so the live Agents section takes over at once — there is no stretch where the picture of
+// the interface stands still and does not react to clicks.
+const TIME_KEYS = [[0, 0], [0.435, 5.3], [0.52, 6.2], [0.78, 7.3], [1, null]];
+const CHAPTER = [0.51, 0.79];
+
+// From here on (≈ 8.5 s: the monitor fills the screen) the picture already reads as the Agents
+// section. If scrolling stops inside this last stretch, the page finishes the move by itself:
+// down to the live section, or back up to the start of the stretch.
+const SNAP_FROM = 0.917;
 
 // Browsers without H.264 (some Linux Chromium builds) keep the static hero.
 const canPlayVideo = video?.canPlayType('video/mp4; codecs="avc1.640033"') !== '';
@@ -411,17 +416,17 @@ if (video && canPlayVideo && !reduceMotion) {
     const scrolled = Math.min(Math.max(-intro.getBoundingClientRect().top, 0), distance);
     const progress = distance > 0 ? scrolled / distance : 0;
 
-    // Wider than the 1440 frame: cover the screen, then settle to the exact layout while the
-    // final frame is held, so it lines up with the Agents section underneath.
+    // Wider than the 1440 frame: cover the screen, then settle to the exact layout during the
+    // final approach, so the last frame lines up with the Agents section underneath.
     const coverScale = Math.max(1, hero.clientWidth / FRAME_WIDTH);
-    const settle = Math.min(1, Math.max(0, (progress - VIDEO_END) / (1 - VIDEO_END)));
+    const settle = Math.min(1, Math.max(0, (progress - SNAP_FROM) / (1 - SNAP_FROM)));
     hero.style.setProperty('--video-scale', String(coverScale + (1 - coverScale) * settle));
 
     hero.style.setProperty('--overlay', String(Math.max(0, 1 - progress / OVERLAY_FADE_END)));
     hero.classList.toggle('is-overlay-hidden', progress >= OVERLAY_FADE_END);
     hero.classList.toggle('is-chapter', progress >= CHAPTER[0] && progress < CHAPTER[1]);
-    hero.classList.toggle('is-ticks', progress >= OVERLAY_FADE_END && progress < VIDEO_END);
-    setTick(Math.round(Math.min(1, progress / VIDEO_END) * (ticks.length - 1)));
+    hero.classList.toggle('is-ticks', progress >= OVERLAY_FADE_END && progress < SNAP_FROM);
+    setTick(Math.round(Math.min(1, progress / SNAP_FROM) * (ticks.length - 1)));
     const isDone = distance > 0 && scrolled >= distance - 0.5;
     const wasDone = intro.classList.contains('is-done');
     // The video ends on the Gaia slide, so scrolling back into it brings the tabs back to Gaia.
@@ -443,12 +448,52 @@ if (video && canPlayVideo && !reduceMotion) {
     }
   };
 
+  // Final approach: never leave the page resting where the video looks like the live section.
+  let lastY = window.scrollY;
+  let direction = 1;
+  let touching = false;
+  let idleTimer;
+
+  const snap = () => {
+    if (touching) return;
+    const distance = intro.offsetHeight - hero.offsetHeight;
+    const scrolled = -intro.getBoundingClientRect().top;
+    if (distance <= 0 || scrolled < distance * SNAP_FROM || scrolled >= distance - 0.5) return;
+    const introTop = window.scrollY - scrolled;
+    const target = direction > 0 ? introTop + distance : introTop + Math.floor(distance * SNAP_FROM) - 1;
+    window.scrollTo({ top: target, behavior: 'smooth' });
+  };
+
+  // Snap once scrolling has stopped: `scrollend` where supported (it also waits for momentum),
+  // otherwise a short pause in scroll events.
+  const hasScrollEnd = 'onscrollend' in window;
+  const onScroll = () => {
+    const y = window.scrollY;
+    if (y !== lastY) direction = y > lastY ? 1 : -1;
+    lastY = y;
+    if (!hasScrollEnd) {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(snap, 150);
+    }
+  };
+  const onTouchStart = () => { touching = true; };
+  const onTouchEnd = () => {
+    touching = false;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(snap, 150);
+  };
+
   // Without the video there is nothing to scrub: fall back to the static hero.
   const disableScrub = () => {
     intro.classList.remove('is-scrub', 'is-done');
     hero.classList.remove('is-chapter', 'is-ticks');
     window.removeEventListener('scroll', requestUpdate);
     window.removeEventListener('resize', requestUpdate);
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('scrollend', snap);
+    window.removeEventListener('touchstart', onTouchStart);
+    window.removeEventListener('touchend', onTouchEnd);
+    clearTimeout(idleTimer);
     video.remove();
   };
 
@@ -482,6 +527,10 @@ if (video && canPlayVideo && !reduceMotion) {
 
   window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', requestUpdate);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  if (hasScrollEnd) window.addEventListener('scrollend', snap);
+  window.addEventListener('touchstart', onTouchStart, { passive: true });
+  window.addEventListener('touchend', onTouchEnd, { passive: true });
   update();
 }
 

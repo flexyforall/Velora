@@ -517,7 +517,7 @@ html.is-loading .loader {
 /* Scroll scrub (enabled from JS): the hero stays pinned for --scrub-distance while the video plays
    frame by frame; its last frame is the Agents section, which then takes over in the same spot. */
 .intro {
-  --scrub-distance: 340vh;
+  --scrub-distance: 312vh;
   position: relative;
   background: var(--bg-accent-dark);
 }
