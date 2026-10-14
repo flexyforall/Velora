@@ -513,7 +513,8 @@ html.is-loading .loader {
 
 .intro.is-scrub .hero {
   position: sticky;
-  top: 0;
+  /* Screens shorter than 810px: pinned with the bottom edge in view (--hero-overflow, from JS). */
+  top: calc(-1 * var(--hero-overflow, 0px));
   /* Seen only beside the video on screens wider than 1440 while the last frame settles:
      replicates the Agents section outside its 1440px frame (dark, white panel from y=30 on the right). */
   background:
@@ -549,6 +550,8 @@ html.is-loading .loader {
 
 .intro.is-scrub + main .agents {
   margin-top: -810px;
+  /* A jump to #agents lands where the pinned hero lets go, so the handoff is complete there. */
+  scroll-margin-top: calc(-1 * var(--hero-overflow, 0px));
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0s linear 0.3s;

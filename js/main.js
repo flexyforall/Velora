@@ -204,6 +204,11 @@ const FRAME_WIDTH = 1440;
 const TIME_KEYS = [[0, 0], [0.4, 5.3], [0.48, 6.2], [0.72, 7.3], [VIDEO_END, null]];
 const CHAPTER = [0.47, 0.73];
 
+// On screens shorter than the 810px hero the pinned hero sits higher by the difference, so its
+// bottom (the hero buttons, the chapter copy, the ticks) stays in view. The first `overflow` px of
+// scroll only bring that bottom up; the scrub starts after them.
+const heroOverflow = () => (hero ? Math.max(0, hero.offsetHeight - window.innerHeight) : 0);
+
 // Browsers without H.264 (some Linux Chromium builds) keep the static hero.
 const canPlayVideo = video?.canPlayType('video/mp4; codecs="avc1.640033"') !== '';
 
@@ -242,8 +247,10 @@ if (video && canPlayVideo && !reduceMotion) {
 
   const update = () => {
     ticking = false;
+    const overflow = heroOverflow();
+    document.documentElement.style.setProperty('--hero-overflow', `${overflow}px`);
     const distance = intro.offsetHeight - hero.offsetHeight;
-    const scrolled = Math.min(Math.max(-intro.getBoundingClientRect().top, 0), distance);
+    const scrolled = Math.min(Math.max(-intro.getBoundingClientRect().top - overflow, 0), distance);
     const progress = distance > 0 ? scrolled / distance : 0;
 
     // Wider than the 1440 frame: cover the screen, then settle to the exact layout while the
@@ -279,6 +286,7 @@ if (video && canPlayVideo && !reduceMotion) {
   const disableScrub = () => {
     intro.classList.remove('is-scrub', 'is-done');
     hero.classList.remove('is-chapter', 'is-ticks');
+    document.documentElement.style.removeProperty('--hero-overflow');
     window.removeEventListener('scroll', requestUpdate);
     window.removeEventListener('resize', requestUpdate);
     video.remove();
@@ -329,7 +337,7 @@ if (siteHeader) {
     ticking = false;
     const isScrub = intro?.classList.contains('is-scrub');
     const threshold = isScrub
-      ? intro.offsetTop + (intro.offsetHeight - hero.offsetHeight) * OVERLAY_FADE_END
+      ? intro.offsetTop + heroOverflow() + (intro.offsetHeight - hero.offsetHeight) * OVERLAY_FADE_END
       : 70;
     siteHeader.classList.toggle('is-visible', window.scrollY > threshold);
 
