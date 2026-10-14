@@ -77,6 +77,13 @@
   --font-chip: "Figtree", "Inter", sans-serif;
 
   --frame: 1440px;
+  /* The part of the 810px hero that fits on screen: the hero copy, the chapter text and the ticks
+     are laid out in it, so on shorter screens nothing at the bottom is cut off. */
+  --hero-visible: min(810px, 100vh);
+}
+
+@supports (height: 100svh) {
+  :root { --hero-visible: min(810px, 100svh); }
 }
 
 /* ---------- reset ---------- */
@@ -519,12 +526,11 @@ html.is-loading .loader {
 
 .intro.is-scrub .hero {
   position: sticky;
-  /* Screens shorter than 810px: pinned with the bottom edge in view (--hero-overflow, from JS). */
-  top: calc(-1 * var(--hero-overflow, 0px));
+  top: 0;
   /* Seen only beside the video on screens wider than 1440 while the last frame settles:
      replicates the Agents section outside its 1440px frame (dark, white panel from y=30 on the right). */
   background:
-    linear-gradient(#fff, #fff) right 0 top calc(30px + var(--media-shift, 0px)) / max(0px, calc((100% - var(--frame)) / 2)) 800px no-repeat,
+    linear-gradient(#fff, #fff) right 0 top 30px / max(0px, calc((100% - var(--frame)) / 2)) 800px no-repeat,
     var(--bg-accent-dark);
 }
 
@@ -533,7 +539,6 @@ html.is-loading .loader {
 .intro.is-scrub .hero__media {
   top: 0;
   height: 810px;
-  transform: translateY(var(--media-shift, 0px));
 }
 
 .intro.is-scrub .hero__poster,
@@ -570,7 +575,10 @@ html.is-loading .loader {
 
 .hero__shade {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--hero-visible);
   background:
     linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)),
     linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)),
@@ -580,7 +588,7 @@ html.is-loading .loader {
 .hero__inner {
   position: relative;
   max-width: var(--frame);
-  height: 100%;
+  height: var(--hero-visible);
   margin: 0 auto;
 }
 
@@ -620,7 +628,8 @@ html.is-loading .loader {
 
 .hero__title {
   position: absolute;
-  top: 296.5px;
+  /* 296.5px in the 810px frame; on shorter screens it moves up by half of the missing height. */
+  top: calc(296.5px - (810px - var(--hero-visible)) / 2);
   left: 50px;
   width: 800px;
 }
@@ -798,7 +807,10 @@ html.is-loading .loader {
 
 .intro.is-scrub .hero__chapter {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--hero-visible);
   display: block;
   pointer-events: none;
 }
@@ -861,7 +873,7 @@ html.is-loading .loader {
 .intro.is-scrub .hero__ticks {
   position: absolute;
   right: calc(max(0px, (100% - var(--frame)) / 2) + 50px);
-  bottom: 49px;
+  bottom: calc(49px + 810px - var(--hero-visible));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
