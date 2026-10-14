@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | `common/` | Меню и ссылки | Логотип Wedge, стрелки |
 | `hero/` | Первый экран | Видео по скроллу, постер, картинка из макета (см. `hero/README.md`) |
-| `agents/` | Вкладки агентов и карточка Gaia | Иллюстрация, точечный фон, иконки статусов |
+| `agents/` | Секция агентов (5 вкладок) | Общие иконки и фон в корне; `referral/`, `front-office/`, `care-gap/`, `rcm/` — иллюстрация и иконки карточки каждого агента |
 | `build/` | Баннер «Build workflows…» | Фон, логотип, линии |
 | `partners/` | Логотипы партнёров | Используются в секции «100% Success Rate» и в футере |
 | `testimonials/` | «100% Success Rate» и Enterprise-grade security | Значки verify, SOC 2, HIPAA |
@@ -16,4 +16,4 @@
 | `integrations/` | Сетка EHR-систем и ROI-баннер | Логотипы: `*_Dark` — обычное состояние, `*_Light` — при наведении |
 | `cta/` | «Save millions of dollars…» | Фон баннера, аватар и иконка кнопки |
 | `footer/` | Футер | Точечный фон, большой логотип Wedge |
-| `fonts/` | — | Inter, Mozilla Headline, DM Mono (woff2, лицензия OFL) |
+| `fonts/` | — | Inter, Mozilla Headline, DM Mono, Figtree (woff2, лицензия OFL) |

@@ -17,6 +17,34 @@ faqItems.forEach((item) => {
   });
 });
 
+// Agents: the side tabs switch the slide shown in the white panel.
+const agentTabs = [...document.querySelectorAll('.agents__tabs [role="tab"]')];
+
+const selectAgent = (index, { focus = false } = {}) => {
+  agentTabs.forEach((tab, i) => {
+    const isActive = i === index;
+    tab.classList.toggle('is-active', isActive);
+    tab.setAttribute('aria-selected', String(isActive));
+    tab.tabIndex = isActive ? 0 : -1;
+    document.getElementById(tab.getAttribute('aria-controls')).classList.toggle('is-active', isActive);
+  });
+  if (focus) agentTabs[index].focus();
+};
+
+agentTabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => selectAgent(i));
+  tab.addEventListener('keydown', (event) => {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
+    if (step) {
+      event.preventDefault();
+      selectAgent((i + step + agentTabs.length) % agentTabs.length, { focus: true });
+    } else if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      selectAgent(event.key === 'Home' ? 0 : agentTabs.length - 1, { focus: true });
+    }
+  });
+});
+
 // Hero scroll scrub: the hero is pinned and scroll position drives the video's currentTime.
 // The last frame of the video is the Agents section, so once the scrub ends the real section
 // fades in on top of it at the same spot.
@@ -57,7 +85,10 @@ if (video && canPlayVideo && !reduceMotion) {
 
     hero.style.setProperty('--overlay', String(Math.max(0, 1 - progress / OVERLAY_FADE_END)));
     hero.classList.toggle('is-overlay-hidden', progress >= OVERLAY_FADE_END);
-    intro.classList.toggle('is-done', distance > 0 && scrolled >= distance - 0.5);
+    const isDone = distance > 0 && scrolled >= distance - 0.5;
+    // The video ends on the Gaia slide, so scrolling back into it brings the tabs back to Gaia.
+    if (!isDone && intro.classList.contains('is-done')) selectAgent(0);
+    intro.classList.toggle('is-done', isDone);
 
     if (video.duration) {
       // Stop just short of the end so the final frame stays on screen.

@@ -85,95 +85,339 @@
   </div>
 
   <main>
-    <!-- Agents -->
+    <!-- Agents: the side tabs switch between the five agent slides -->
     <section class="agents" id="agents">
       <div class="agents__inner">
         <img class="agents__dots" src="assets/agents/dots.png" alt="">
         <span class="agents__rail" aria-hidden="true"></span>
 
-        <ol class="agents__tabs">
-          <li class="vtab is-active"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">01</span><span class="t-body-s">Gaia platform</span></li>
-          <li class="vtab"><span class="vtab__num t-tag-s">02</span><span class="t-body-s">Autonomous Referral Management</span></li>
-          <li class="vtab"><span class="vtab__num t-tag-s">03</span><span class="t-body-s">Autonomous Front Office</span></li>
-          <li class="vtab"><span class="vtab__num t-tag-s">04</span><span class="t-body-s">Care Gap Closure</span></li>
-          <li class="vtab"><span class="vtab__num t-tag-s">05</span><span class="t-body-s">Revenue Cycle Management</span></li>
-        </ol>
+        <div class="agents__tabs" role="tablist" aria-label="Wedge agents" aria-orientation="vertical">
+          <button class="vtab is-active" type="button" role="tab" id="agent-tab-gaia" aria-controls="agent-gaia" aria-selected="true"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">01</span><span class="t-body-s">Gaia platform</span></button>
+          <button class="vtab" type="button" role="tab" id="agent-tab-referral" aria-controls="agent-referral" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">02</span><span class="t-body-s">Autonomous Referral Management</span></button>
+          <button class="vtab" type="button" role="tab" id="agent-tab-front-office" aria-controls="agent-front-office" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">03</span><span class="t-body-s">Autonomous Front Office</span></button>
+          <button class="vtab" type="button" role="tab" id="agent-tab-care-gap" aria-controls="agent-care-gap" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">04</span><span class="t-body-s">Care Gap Closure</span></button>
+          <button class="vtab" type="button" role="tab" id="agent-tab-rcm" aria-controls="agent-rcm" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">05</span><span class="t-body-s">Revenue Cycle Management</span></button>
+        </div>
       </div>
 
       <div class="agents__panel">
         <div class="agents__panel-inner">
-          <div class="agents__illustration" aria-hidden="true">
-            <img src="assets/agents/gaia-platform-1.png" alt="">
-          </div>
-          <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-          <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
 
-          <div class="agents__top">
-            <div class="agents__title">
-              <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Medicaid and Medi-Cal</span>
-              <h2 class="t-h3">Keep eligible<br>patients covered.</h2>
+          <!-- 01 Gaia platform -->
+          <div class="agent-slide is-active" id="agent-gaia" role="tabpanel" aria-labelledby="agent-tab-gaia">
+            <div class="agents__illustration" aria-hidden="true">
+              <img src="assets/agents/gaia-platform-1.png" alt="">
             </div>
-            <div class="agents__body">
-              <p class="t-body-m">Gaia runs outreach, application completion and follow-up through enrollment and renewal.</p>
-              <a class="btn btn--dark btn--icon btn--icon-sm" href="#contact">
-                <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
-                <span class="btn__text">
-                  <span class="t-body-m-medium">Explore Gaia</span>
-                  <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
-                </span>
-                <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
-              </a>
+            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
+            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
+
+            <div class="agents__top">
+              <div class="agents__title">
+                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Medicaid and Medi-Cal</span>
+                <h2 class="t-h3">Keep eligible<br>patients covered.</h2>
+              </div>
+              <div class="agents__body">
+                <p class="t-body-m">Gaia runs outreach, application completion and follow-up through enrollment and renewal.</p>
+                <a class="btn btn--dark btn--icon" href="#contact">
+                  <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
+                  <span class="btn__text">
+                    <span class="t-body-m-medium">Explore Gaia</span>
+                    <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
+                  </span>
+                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="flow-card">
+              <div class="flow-card__steps">
+                <div class="flow-step">
+                  <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                  <span class="flow-step__label">Eligible Patients</span>
+                  <span class="flow-step__status">Renewal due in 30 days</span>
+                </div>
+                <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+                <div class="flow-step">
+                  <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                  <span class="flow-step__label">Reached</span>
+                  <span class="flow-step__status">Outreach via SMS</span>
+                </div>
+                <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+                <div class="flow-step">
+                  <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                  <span class="flow-step__label">Application Started</span>
+                  <span class="flow-step__status">Initialized</span>
+                </div>
+                <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+                <div class="flow-step">
+                  <img src="assets/agents/check.svg" width="16" height="16" alt="">
+                  <span class="flow-step__label">Application Completed</span>
+                  <span class="flow-step__status">Submitted</span>
+                </div>
+                <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
+                <div class="flow-step">
+                  <span class="flow-step__loading"><img src="assets/agents/loading.svg" alt=""></span>
+                  <span class="flow-step__label">Coverage Retained</span>
+                  <span class="flow-step__status flow-step__status--done">Renewed</span>
+                </div>
+              </div>
+              <img class="card-line" src="assets/agents/line73.svg" width="364" height="1" alt="">
+              <div class="metrics">
+                <div class="metric metric--fixed" style="--w: 109.333px">
+                  <span class="metric__value">400%</span>
+                  <span class="metric__label">Enrollment Capacity<br>Increased</span>
+                </div>
+                <div class="metric">
+                  <span class="metric__value">+60%</span>
+                  <span class="metric__label">Month-to-Month <br>Enrollment Growth</span>
+                </div>
+                <div class="metric">
+                  <span class="metric__value">&gt;70%</span>
+                  <span class="metric__label">Staff Workload Reduced</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="flow-card">
-            <div class="flow-card__steps">
-              <div class="flow-step">
-                <img src="assets/agents/check.svg" width="16" height="16" alt="">
-                <span class="flow-step__label">Eligible Patients</span>
-                <span class="flow-step__status">Renewal due in 30 days</span>
+          <!-- 02 Autonomous Referral Management -->
+          <div class="agent-slide" id="agent-referral" role="tabpanel" aria-labelledby="agent-tab-referral">
+            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
+              <img src="assets/agents/referral/illustration.png" alt="">
+            </div>
+            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
+            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
+
+            <div class="agents__top agents__top--end agents__top--offset">
+              <div class="agents__title">
+                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Referral Management Platform</span>
+                <h2 class="t-h3 agents__heading--two-lines">Close the referral loop.</h2>
               </div>
-              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-              <div class="flow-step">
-                <img src="assets/agents/check.svg" width="16" height="16" alt="">
-                <span class="flow-step__label">Reached</span>
-                <span class="flow-step__status">Outreach via SMS</span>
-              </div>
-              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-              <div class="flow-step">
-                <img src="assets/agents/check.svg" width="16" height="16" alt="">
-                <span class="flow-step__label">Application Started</span>
-                <span class="flow-step__status">Initialized</span>
-              </div>
-              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-              <div class="flow-step">
-                <img src="assets/agents/check.svg" width="16" height="16" alt="">
-                <span class="flow-step__label">Application Completed</span>
-                <span class="flow-step__status">Submitted</span>
-              </div>
-              <img class="flow-card__connector" src="assets/agents/connector.svg" width="30" height="6" alt="">
-              <div class="flow-step">
-                <span class="flow-step__loading"><img src="assets/agents/loading.svg" alt=""></span>
-                <span class="flow-step__label">Coverage Retained</span>
-                <span class="flow-step__status flow-step__status--done">Renewed</span>
+              <div class="agents__body">
+                <p class="t-body-m">Wedge moves referrals from order to completed appointment and returned documentation.</p>
+                <a class="btn btn--dark btn--icon" href="#contact">
+                  <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
+                  <span class="btn__text">
+                    <span class="t-body-m-medium">Explore Referrals</span>
+                    <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
+                  </span>
+                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
+                </a>
               </div>
             </div>
-            <img class="flow-card__line" src="assets/agents/line73.svg" width="364" height="1" alt="">
-            <div class="flow-card__metrics">
-              <div class="metric metric--first">
-                <span class="metric__value">400%</span>
-                <span class="metric__label">Enrollment Capacity<br>Increased</span>
+
+            <div class="agent-card">
+              <div class="agent-card__group">
+                <div class="referral-head">
+                  <img src="assets/agents/referral/story.svg" width="20" height="20" alt="">
+                  <span>Referral Performance Tracking</span>
+                </div>
+                <div class="steps">
+                  <div class="step"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Referral Created</span></div>
+                  <img src="assets/agents/referral/connector.svg" width="24" height="6" alt="">
+                  <div class="step"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Authorization (when required)</span></div>
+                  <img src="assets/agents/referral/connector.svg" width="24" height="6" alt="">
+                  <div class="step"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Scheduled</span></div>
+                  <img src="assets/agents/referral/connector.svg" width="24" height="6" alt="">
+                  <div class="step step--pending"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Patient Seen</span></div>
+                  <img src="assets/agents/referral/connector.svg" width="24" height="6" alt="">
+                  <div class="step step--pending"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Documentation Returned</span></div>
+                </div>
               </div>
-              <div class="metric">
-                <span class="metric__value">+60%</span>
-                <span class="metric__label">Month-to-Month <br>Enrollment Growth</span>
-              </div>
-              <div class="metric">
-                <span class="metric__value">&gt;70%</span>
-                <span class="metric__label">Staff Workload Reduced</span>
+              <img class="card-line" src="assets/agents/line-348.svg" width="348" height="1" alt="">
+              <div class="metrics metrics--tight">
+                <div class="metric metric--fixed" style="--w: 116px">
+                  <span class="metric__value">250%</span>
+                  <span class="metric__label">Closed-Loop Referral<br>Capacity Increased</span>
+                </div>
+                <div class="metric metric--fixed" style="--w: 116px">
+                  <span class="metric__value">&gt;90%</span>
+                  <span class="metric__label">Closed-Loop<br>Conversion Rate</span>
+                </div>
+                <div class="metric metric--fixed" style="--w: 116px">
+                  <span class="metric__value">&gt;80%</span>
+                  <span class="metric__label">Staff Workload Reduced</span>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- 03 Autonomous Front Office -->
+          <div class="agent-slide" id="agent-front-office" role="tabpanel" aria-labelledby="agent-tab-front-office">
+            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
+              <img src="assets/agents/front-office/illustration.png" alt="">
+            </div>
+            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
+            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
+
+            <div class="agents__top agents__top--end">
+              <div class="agents__title agents__title--wide">
+                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Autonomous Front Office</span>
+                <h2 class="t-h3">Patient access without<br>the administrative bottleneck</h2>
+              </div>
+              <div class="agents__body">
+                <p class="t-body-m">Wedge coordinates calls, scheduling, registration and follow-up across the front office.</p>
+                <a class="btn btn--dark btn--icon" href="#contact">
+                  <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
+                  <span class="btn__text">
+                    <span class="t-body-m-medium">Explore Front Office</span>
+                    <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
+                  </span>
+                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="call">
+                <div class="call__row">
+                  <span class="call__icon"><img src="assets/agents/front-office/call.svg" width="26" height="26" alt=""></span>
+                  <span class="call__text">I’d like to book an urgent post-op follow-up</span>
+                </div>
+                <img class="card-line" src="assets/agents/line-348.svg" width="348" height="1" alt="">
+              </div>
+              <div class="steps steps--flush">
+                <div class="step"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Insurance Verified</span></div>
+                <img src="assets/agents/front-office/connector.svg" width="24" height="7" alt="">
+                <div class="step step--branch">
+                  <img src="assets/agents/front-office/dot-frame.svg" width="10" height="20" alt="">
+                  <div class="step__detail">
+                    <span>Appointment Scheduled</span>
+                    <div class="step__tags">
+                      <span class="chip"><img src="assets/agents/front-office/alert.svg" width="12" height="12" alt="">Complex Scheduling Exception</span>
+                      <span class="chip"><img src="assets/agents/front-office/people.svg" width="12" height="12" alt="">Escalated to Staff</span>
+                    </div>
+                  </div>
+                </div>
+                <img src="assets/agents/front-office/connector.svg" width="24" height="7" alt="">
+                <div class="step"><img src="assets/agents/dot.svg" width="10" height="10" alt=""><span>Forms Completed</span></div>
+              </div>
+              <img class="card-line" src="assets/agents/line-348.svg" width="348" height="1" alt="">
+              <div class="metrics metrics--tight">
+                <div class="metric metric--fixed" style="--w: 116px">
+                  <span class="metric__value">&gt;98%</span>
+                  <span class="metric__label">Patient Satisfaction<br>Score (CSAT)</span>
+                </div>
+                <div class="metric metric--fixed" style="--w: 116px">
+                  <span class="metric__value">&gt;85%</span>
+                  <span class="metric__label">Charity Care Write-offs Reduced</span>
+                </div>
+                <div class="metric metric--fixed" style="--w: 116px">
+                  <span class="metric__value">&gt;60%</span>
+                  <span class="metric__label">Clinical Care<br>Gaps Addressed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 04 Care Gap Closure -->
+          <div class="agent-slide" id="agent-care-gap" role="tabpanel" aria-labelledby="agent-tab-care-gap">
+            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
+              <img src="assets/agents/care-gap/illustration.png" alt="">
+            </div>
+            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
+            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
+
+            <div class="agents__top agents__top--center">
+              <div class="agents__title agents__title--wide">
+                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Care Gap Closure</span>
+                <h2 class="t-h3">Close preventive care<br>gaps at scale.</h2>
+              </div>
+              <div class="agents__body">
+                <p class="t-body-m">Wedge spots clinical gaps, personalizes patient outreach, and schedules preventive visits automatically.</p>
+                <a class="btn btn--dark btn--icon" href="#contact">
+                  <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
+                  <span class="btn__text">
+                    <span class="t-body-m-medium">Explore Care Gap</span>
+                    <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
+                  </span>
+                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card__group agent-card__group--gap-4">
+                <div class="record">
+                  <p class="record__title">Action Required</p>
+                  <p class="record__row record__row--first"><span class="record__key">Measure:</span><span>HEDIS COL (Colon Screening)</span></p>
+                  <p class="record__row record__row--last"><span class="record__key">Patient:</span><span>James L.</span></p>
+                </div>
+                <p class="notice"><img src="assets/agents/story-14.svg" width="14" height="14" alt=""><span>Text outreach initialized. Quality score optimized.</span></p>
+              </div>
+              <img class="card-line" src="assets/agents/line-348.svg" width="348" height="1" alt="">
+              <div class="metrics">
+                <div class="metric metric--fixed" style="--w: 105.333px">
+                  <span class="metric__value">&gt;60%</span>
+                  <span class="metric__label">Clinical Care Gaps Addressed</span>
+                </div>
+                <div class="metric metric--fixed" style="--w: 115.333px">
+                  <span class="metric__value">+25%</span>
+                  <span class="metric__label">Star Rating Performance Increase</span>
+                </div>
+                <div class="metric">
+                  <span class="metric__value">&gt;85%</span>
+                  <span class="metric__label">Patient Outreach Conversion</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 05 Revenue Cycle Management -->
+          <div class="agent-slide" id="agent-rcm" role="tabpanel" aria-labelledby="agent-tab-rcm">
+            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
+              <img src="assets/agents/rcm/illustration.png" alt="">
+            </div>
+            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
+            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
+
+            <div class="agents__top agents__top--center">
+              <div class="agents__title agents__title--wide">
+                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Revenue Cycle Management</span>
+                <h2 class="t-h3">Automate claims.<br>Eliminate denials.</h2>
+              </div>
+              <div class="agents__body">
+                <p class="t-body-m">Wedge tracks each invoice from start to finish, fixing coding errors automatically.</p>
+                <a class="btn btn--dark btn--icon" href="#contact">
+                  <img src="assets/agents/btn-icon.svg" width="36" height="36" alt="">
+                  <span class="btn__text">
+                    <span class="t-body-m-medium">Explore Revenue Cycle</span>
+                    <img src="assets/agents/arrow-right-light.svg" width="12" height="12" alt="">
+                  </span>
+                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg" alt=""></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-card__group agent-card__group--gap-8">
+                <p class="denials__title"><span class="denials__icon"><img src="assets/agents/rcm/story-gray.svg" width="14" height="14" alt=""></span>Live Denial Capture</p>
+                <img class="card-line" src="assets/agents/line-348.svg" width="348" height="1" alt="">
+                <div class="denials">
+                  <div class="invoices">
+                    <p class="invoice"><span>#INV-9940</span><span>Aetna</span><span class="invoice__amount invoice__amount--ok">$4,200</span></p>
+                    <p class="invoice"><span>#INV-9940</span><span>United</span><span class="invoice__flag"><img src="assets/agents/rcm/alert.svg" width="16" height="16" alt=""><span class="invoice__amount invoice__amount--warn">$24,850</span></span></p>
+                  </div>
+                  <p class="notice"><img src="assets/agents/story-14.svg" width="14" height="14" alt=""><span>Appeal auto-generated.<br>Revenue leakage prevented.</span></p>
+                </div>
+              </div>
+              <img class="card-line card-line--350" src="assets/agents/rcm/line-350.svg" width="350" height="1" alt="">
+              <div class="metrics">
+                <div class="metric metric--fixed" style="--w: 109.333px">
+                  <span class="metric__value">-35%</span>
+                  <span class="metric__label">Claim Denial Rate</span>
+                </div>
+                <div class="metric">
+                  <span class="metric__value">99.2%</span>
+                  <span class="metric__label">Clean Claim Rate (First Pass)</span>
+                </div>
+                <div class="metric">
+                  <span class="metric__value">-12 Days</span>
+                  <span class="metric__label">Days Sales Outstanding (DSO)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
