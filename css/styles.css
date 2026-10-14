@@ -1789,9 +1789,20 @@ html.is-loading .loader {
 
 .about__muted { color: rgba(17, 17, 17, 0.5); }
 
-/* Scroll reveal (js/main.js): muted words darken one by one and this phrase's underline grows with
-   them. It is drawn as a background so it can grow across the lines; position and thickness match
-   the font's own underline (from-font) at 48px. --underline is a length in px. */
+/* Scroll fill (js/main.js): the muted words fill in from left to right — dark up to --fill (px from
+   the word's left edge, with a soft 16px front), muted after it. */
+.about__text.is-filling .about__muted span:not(.about__underline) {
+  background-image: linear-gradient(90deg,
+    var(--text-primary-inverted) calc(var(--fill, -8px) - 8px),
+    rgba(17, 17, 17, 0.5) calc(var(--fill, -8px) + 8px));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The phrase's underline grows right under the fill front. It is drawn as a background so it can
+   grow across the lines; position and thickness match the font's own underline (from-font) at 48px.
+   --underline is a length in px. */
 .about__underline {
   background: linear-gradient(var(--text-primary-inverted), var(--text-primary-inverted)) 0 47px / var(--underline, 0px) 2px no-repeat;
 }

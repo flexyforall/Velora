@@ -70,8 +70,8 @@ agentTabs.forEach((tab, i) => {
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// About: as the text scrolls up the screen its muted words darken one by one (Figma «about»,
-// 1450:2727); under the key phrase the underline grows together with the words being filled.
+// About: as the text scrolls up the screen its muted part fills in from left to right (Figma «about»,
+// 1450:2727), and under the key phrase the underline grows right under the fill front.
 const aboutText = document.querySelector('.about__text');
 
 if (aboutText) {
@@ -98,70 +98,56 @@ if (aboutText) {
     node.replaceWith(fragment);
   });
   const words = [...muted.querySelectorAll('span:not(.about__underline)')];
-  const phraseWords = [...underline.querySelectorAll('span')];
-  const firstPhraseWord = words.indexOf(phraseWords[0]);
-
-  // The underline is one background running through the phrase's line fragments laid end to end.
-  // For each phrase word store where its stretch of that strip starts and ends (the stretch
-  // includes the space before it), so the line can follow the word being filled.
-  let stretches = [];
-  const measure = () => {
-    const lines = [...underline.getClientRects()];
-    const lineStart = [];
-    let length = 0;
-    lines.forEach((rect, i) => {
-      lineStart[i] = length;
-      length += rect.width;
-    });
-    const along = (rect) => {
-      const middle = rect.top + rect.height / 2;
-      const i = Math.max(0, lines.findIndex((line) => middle >= line.top && middle <= line.bottom));
-      return lineStart[i] + rect.right - lines[i].left;
-    };
-    let previousEnd = 0;
-    stretches = phraseWords.map((word) => {
-      const end = along(word.getBoundingClientRect());
-      const stretch = [previousEnd, end];
-      previousEnd = end;
-      return stretch;
-    });
-  };
-
-  const shown = new Array(words.length).fill(-1);
-  let progress = 0;
-
-  const render = () => {
-    const filled = progress * words.length; // how many words are dark, fractional
-    words.forEach((word, i) => {
-      const t = Math.round(Math.min(1, Math.max(0, filled - i)) * 100) / 100;
-      if (t !== shown[i]) {
-        shown[i] = t;
-        word.style.color = `rgba(17, 17, 17, ${0.5 + 0.5 * t})`;
-      }
-    });
-
-    const inPhrase = filled - firstPhraseWord;
-    let length = 0;
-    if (inPhrase >= stretches.length) {
-      length = stretches[stretches.length - 1]?.[1] ?? 0;
-    } else if (inPhrase > 0) {
-      const [from, to] = stretches[Math.floor(inPhrase)];
-      length = from + (to - from) * (inPhrase % 1);
-    }
-    underline.style.setProperty('--underline', `${length}px`);
-  };
-
-  const remeasure = () => {
-    measure();
-    render();
-  };
-  document.fonts.ready.then(remeasure);
-  window.addEventListener('resize', remeasure);
 
   if (reduceMotion) {
-    progress = 1;
-    remeasure();
+    // No scroll animation: the text is shown filled, with the whole phrase underlined.
+    words.forEach((word) => { word.style.color = 'var(--text-primary-inverted)'; });
+    underline.style.setProperty('--underline', '100000px');
   } else {
+    // The fill runs along the muted part's line fragments laid end to end (one strip) at an even
+    // speed: every word is dark up to the fill front (--fill, px from its own left edge). The
+    // underline is a background running through the phrase's own fragments; the phrase is one
+    // stretch of the same strip, so the line grows up to exactly the same front.
+    const SOFT = 8; // px either side of the front that blend from dark to muted
+    let spans = [];
+    let strip = [0, 0];
+    let phrase = [0, 0];
+    let progress = 0;
+
+    const measure = () => {
+      const lines = [...muted.getClientRects()];
+      const lineStart = [];
+      let length = 0;
+      lines.forEach((rect, i) => {
+        lineStart[i] = length;
+        length += rect.width;
+      });
+      const along = (x, rect) => {
+        const middle = rect.top + rect.height / 2;
+        const i = Math.max(0, lines.findIndex((line) => middle >= line.top && middle <= line.bottom));
+        return lineStart[i] + x - lines[i].left;
+      };
+      spans = words.map((word) => {
+        const rect = word.getBoundingClientRect();
+        return { word, start: along(rect.left, rect), end: along(rect.right, rect), shown: null };
+      });
+      const phraseLines = [...underline.getClientRects()];
+      phrase = [along(phraseLines[0].left, phraseLines[0]), phraseLines.reduce((sum, rect) => sum + rect.width, 0)];
+      strip = [spans[0].start - SOFT, spans[spans.length - 1].end + SOFT];
+    };
+
+    const render = () => {
+      const front = strip[0] + (strip[1] - strip[0]) * progress;
+      spans.forEach((span) => {
+        const fill = Math.round(Math.min(span.end - span.start + SOFT, Math.max(-SOFT, front - span.start)));
+        if (fill !== span.shown) {
+          span.shown = fill;
+          span.word.style.setProperty('--fill', `${fill}px`);
+        }
+      });
+      underline.style.setProperty('--underline', `${Math.max(0, Math.min(phrase[1], front - phrase[0]))}px`);
+    };
+
     // Starts when the text's top reaches 80% of the screen height, ends at 30%.
     let ticking = false;
     const update = () => {
@@ -177,10 +163,16 @@ if (aboutText) {
         requestAnimationFrame(update);
       }
     };
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    const remeasure = () => {
+      measure();
+      update();
+    };
+
+    aboutText.classList.add('is-filling');
     remeasure();
-    update();
+    document.fonts.ready.then(remeasure);
+    window.addEventListener('resize', remeasure);
+    window.addEventListener('scroll', requestUpdate, { passive: true });
   }
 }
 
@@ -239,13 +231,11 @@ const KEYFRAMES = {
 };
 
 // Words of one heading, one after another; long texts get a shorter step so they finish in time.
-// Returns when (ms) each word starts.
 const playWords = (words, delay) => {
   const step = Math.min(WORD_STAGGER, 1000 / words.length);
   words.forEach((word, i) => word.animate(KEYFRAMES.word, {
     duration: 1000, delay: delay + i * step, easing: EASE, fill: 'backwards',
   }));
-  return (word) => delay + words.indexOf(word) * step;
 };
 
 // Sections «develop» into place as they scroll into view: headings word by word, the other blocks
@@ -267,7 +257,7 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
     ['.security', 'up'],
     ['.about__bg', 'fade'],
     ['.about__tag', 'up'],
-    ['.about__text', 'words'], // the words also darken with the scroll (see About above)
+    ['.about__text', 'up'], // one block: its words fill in with the scroll (see About above)
     ['.impact__banner', 'banner'],
     ['.impact__top .tag', 'up'],
     ['.impact__titles h2', 'words'],
@@ -315,11 +305,7 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
         observer.unobserve(el);
         const delay = i * STAGGER;
         if (kind === 'words') {
-          const startOf = playWords(words, delay);
-          // The About underline is drawn under its words, so it fades in together with the first of them.
-          el.querySelectorAll('.about__underline').forEach((line) => line.animate(KEYFRAMES.fade, {
-            duration: 1000, delay: startOf(words.find((word) => line.contains(word))), easing: EASE, fill: 'backwards',
-          }));
+          playWords(words, delay);
         } else {
           el.animate(KEYFRAMES[kind], {
             duration: kind === 'banner' || kind === 'fade' ? 1200 : 1000, delay, easing: EASE, fill: 'backwards',
