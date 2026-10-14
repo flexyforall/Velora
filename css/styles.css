@@ -252,6 +252,107 @@ button {
 .link--light { color: var(--text-primary); }
 .link--dark { color: var(--text-primary-inverted); }
 
+/* ---------- loader (Figma «Loader», 1444:2692) ---------- */
+
+.loader { display: none; }
+html.is-loading { overflow: hidden; }
+
+html.is-loading .loader {
+  display: block;
+}
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  background: #fff;
+}
+
+.loader__line {
+  position: absolute;
+  top: 0;
+  bottom: 109px;
+  left: 50%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Position, size and radius are driven from JS. */
+.loader__image {
+  position: absolute;
+  overflow: hidden;
+}
+
+.loader__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+}
+
+.loader__frame {
+  position: absolute;
+}
+
+.loader__corner {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+}
+
+.loader__corner img {
+  position: absolute;
+  top: 0;
+  left: -0.5px;
+  width: 11.5px;
+  height: 11.5px;
+  max-width: none;
+}
+
+.loader__corner--tl { top: 0; left: 0; transform: rotate(90deg); }
+.loader__corner--tr { top: 0; right: 0; transform: rotate(90deg) scaleY(-1); }
+.loader__corner--bl { bottom: 0; left: 0; transform: rotate(-90deg) scaleY(-1); }
+.loader__corner--br { right: 0; bottom: 0; transform: rotate(-90deg); }
+
+.loader__progress {
+  position: absolute;
+  bottom: 63px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 200px;
+  transform: translateX(-50%);
+}
+
+.loader__value {
+  width: 100%;
+  font-family: var(--font-headline);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  letter-spacing: -1.12px;
+  text-align: center;
+  color: #000;
+}
+
+.loader__bar {
+  width: 100px;
+  height: 11px;
+}
+
+/* 1px stripes with a green gradient across the filled part, as in the Figma progress line. */
+.loader__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(to right, #31ae7d, #1f4a3c);
+  -webkit-mask: repeating-linear-gradient(to right, #000 0 1px, transparent 1px 2px);
+  mask: repeating-linear-gradient(to right, #000 0 1px, transparent 1px 2px);
+}
+
 /* ---------- hero ---------- */
 
 .hero {

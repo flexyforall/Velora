@@ -5,12 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wedge — Effortless Healthcare Operations</title>
   <meta name="description" content="Wedge runs enrollment, referrals and patient access end to end, taking operational work off your team's plate.">
+  <script>
+    // Loader (see js/main.js): only with JS, motion allowed, and when the page opens at the top.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !location.hash) {
+      document.documentElement.classList.add('is-loading');
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    }
+  </script>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/mozilla-headline-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/dm-mono-500-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
+  <!-- Loader: the first video frame grows with the load progress, then expands into the hero -->
+  <div class="loader" aria-hidden="true">
+    <span class="loader__line"></span>
+    <div class="loader__image"><img src="assets/hero/hero-poster.jpg" alt=""></div>
+    <div class="loader__frame">
+      <span class="loader__corner loader__corner--tl"><img src="assets/loader/corner.svg" alt=""></span>
+      <span class="loader__corner loader__corner--tr"><img src="assets/loader/corner.svg" alt=""></span>
+      <span class="loader__corner loader__corner--bl"><img src="assets/loader/corner.svg" alt=""></span>
+      <span class="loader__corner loader__corner--br"><img src="assets/loader/corner.svg" alt=""></span>
+    </div>
+    <div class="loader__progress">
+      <span class="loader__value">0%</span>
+      <span class="loader__bar"><span class="loader__fill"></span></span>
+    </div>
+  </div>
 
   <!-- Hero: pinned while scrolling scrubs the video from the building into the Agents screen -->
   <div class="intro">

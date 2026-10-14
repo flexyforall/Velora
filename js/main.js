@@ -45,6 +45,30 @@ agentTabs.forEach((tab, i) => {
   });
 });
 
+// Load progress shown by the loader: 0..1 per resource. The video entry is reset to 0 only when
+// the scrub actually loads it.
+const loadProgress = { fonts: 0, poster: 0, video: 1 };
+
+// Reads a response body chunk by chunk to report download progress (0..1).
+const fetchBlob = async (url, onProgress) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const total = Number(response.headers.get('Content-Length'));
+  if (!response.body || !total) return response.blob();
+
+  const reader = response.body.getReader();
+  const chunks = [];
+  let received = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    received += value.length;
+    onProgress(received / total);
+  }
+  return new Blob(chunks, { type: response.headers.get('Content-Type') || 'video/mp4' });
+};
+
 // Hero scroll scrub: the hero is pinned and scroll position drives the video's currentTime.
 // The last frame of the video is the Agents section, so once the scrub ends the real section
 // fades in on top of it at the same spot.
@@ -114,8 +138,14 @@ if (video && canPlayVideo && !reduceMotion) {
 
   video.addEventListener('loadedmetadata', update);
   video.addEventListener('seeked', seek);
-  video.addEventListener('loadeddata', () => hero.classList.add('is-video-ready'));
-  video.addEventListener('error', disableScrub);
+  video.addEventListener('loadeddata', () => {
+    hero.classList.add('is-video-ready');
+    loadProgress.video = 1;
+  });
+  video.addEventListener('error', () => {
+    loadProgress.video = 1;
+    disableScrub();
+  });
 
   // iOS Safari only decodes frames after a play() call made from a user gesture.
   window.addEventListener('touchstart', () => {
@@ -126,12 +156,125 @@ if (video && canPlayVideo && !reduceMotion) {
 
   // Load the whole file into a Blob: a blob: URL is seekable to any frame even when the
   // host doesn't support HTTP range requests.
-  fetch(video.dataset.src)
-    .then((response) => (response.ok ? response.blob() : Promise.reject(new Error(response.status))))
+  loadProgress.video = 0;
+  fetchBlob(video.dataset.src, (share) => { loadProgress.video = share * 0.95; })
     .then((blob) => { video.src = URL.createObjectURL(blob); })
-    .catch(disableScrub);
+    .catch(() => {
+      loadProgress.video = 1;
+      disableScrub();
+    });
 
   window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', requestUpdate);
   update();
+}
+
+// Loader (Figma «Loader»): the first video frame grows with the load progress inside corner
+// brackets, then expands into the hero. Sizes come from the 1440×810 frames: 193×109 at 63%,
+// 621×351 at 100%, then 1317×745 before filling the hero.
+const loader = document.querySelector('.loader');
+
+if (loader && document.documentElement.classList.contains('is-loading')) {
+  const image = loader.querySelector('.loader__image');
+  const frame = loader.querySelector('.loader__frame');
+  const value = loader.querySelector('.loader__value');
+  const fill = loader.querySelector('.loader__fill');
+  const poster = document.querySelector('.hero__poster');
+
+  const WEIGHTS = { fonts: 0.15, poster: 0.25, video: 0.6 };
+  const MIN_DURATION = 1400; // ms; keeps the count readable when everything is cached
+  const MAX_WAIT = 6000; // ms; after this the site opens and the video keeps loading behind it
+
+  window.scrollTo(0, 0);
+  document.fonts.ready.then(() => { loadProgress.fonts = 1; });
+  if (poster.complete) loadProgress.poster = 1;
+  else ['load', 'error'].forEach((type) => poster.addEventListener(type, () => { loadProgress.poster = 1; }));
+
+  const viewport = () => {
+    const width = document.documentElement.clientWidth;
+    const height = window.innerHeight;
+    return { width, height, scale: Math.min(1, width / 1440, height / 810) };
+  };
+
+  // Image rect while loading: grows exponentially so 63% gives 193px and 100% gives 621px.
+  const loadingRect = (percent, vp) => {
+    const w = 621 * vp.scale * (193 / 621) ** ((100 - percent) / 37);
+    const h = (w * 351) / 621;
+    const late = Math.min(1, Math.max(0, (percent - 63) / 37));
+    return {
+      x: (vp.width - w) / 2, y: (vp.height - h) / 2 - 0.5, w, h,
+      radius: 60 * vp.scale, padX: 7 - 6 * late, padY: 6,
+    };
+  };
+
+  const setRect = (r) => {
+    Object.assign(image.style, { left: `${r.x}px`, top: `${r.y}px`, width: `${r.w}px`, height: `${r.h}px`, borderRadius: `${r.radius}px` });
+    Object.assign(frame.style, {
+      left: `${r.x - r.padX / 2}px`, top: `${r.y - r.padY / 2}px`, width: `${r.w + r.padX}px`, height: `${r.h + r.padY}px`,
+    });
+  };
+
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  const tween = (from, to, duration, onFrame) => new Promise((resolve) => {
+    const start = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      const e = easeInOut(t);
+      const rect = {};
+      Object.keys(from).forEach((key) => { rect[key] = lerp(from[key], to[key], e); });
+      setRect(rect);
+      onFrame?.(t);
+      if (t < 1) requestAnimationFrame(step);
+      else resolve();
+    };
+    requestAnimationFrame(step);
+  });
+
+  const reveal = async () => {
+    const vp = viewport();
+    const ui = [loader.querySelector('.loader__line'), loader.querySelector('.loader__progress')];
+    ui.forEach((el) => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }));
+
+    // Nearly full screen with the brackets near the edges, as in the third Figma frame.
+    const w = Math.min(vp.width - 123, ((vp.height - 65) * 1317) / 745);
+    const h = (w * 745) / 1317;
+    const wide = { x: (vp.width - w) / 2, y: (vp.height - h) / 2 - 0.5, w, h, radius: 20, padX: 19, padY: 22 };
+    const heroRect = hero.getBoundingClientRect();
+    const full = { x: heroRect.left, y: heroRect.top, w: heroRect.width, h: heroRect.height, radius: 0, padX: 19, padY: 22 };
+
+    await tween(loadingRect(100, vp), wide, 800);
+    await tween(wide, full, 600, (t) => { frame.style.opacity = String(1 - t); });
+
+    // Hand over to the hero: its copy fades in while the white loader fades out.
+    loader.style.display = 'block';
+    document.documentElement.classList.remove('is-loading');
+    hero.querySelector('.hero__inner').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: 'ease-out' });
+    await loader.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-out' }).finished;
+    loader.remove();
+  };
+
+  const start = performance.now();
+  let shown = 0;
+
+  const tick = (now) => {
+    const elapsed = now - start;
+    let target = Object.keys(WEIGHTS).reduce((sum, key) => sum + WEIGHTS[key] * loadProgress[key], 0) * 100;
+    if (elapsed > MAX_WAIT) target = 100;
+    target = Math.min(target, (elapsed / MIN_DURATION) * 100);
+
+    shown += (target - shown) * 0.12;
+    if (target - shown < 0.4) shown = target;
+
+    const vp = viewport();
+    setRect(loadingRect(shown, vp));
+    value.textContent = `${Math.round(shown)}%`;
+    fill.style.width = `${shown}px`;
+
+    if (shown >= 100) reveal();
+    else requestAnimationFrame(tick);
+  };
+
+  requestAnimationFrame(tick);
 }
