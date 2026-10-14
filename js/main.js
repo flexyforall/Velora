@@ -161,6 +161,148 @@ if (aboutText) {
   }
 }
 
+// Sections «develop» into place as they scroll into view: headings word by word out of a blur,
+// the other blocks rising in one after another, the dark banners opening out of a slightly inset
+// frame. Each element plays once. The Agents section is left as is (it continues the video's last
+// frame) and so is the About text (it has its own scroll animation).
+if (!reduceMotion && 'IntersectionObserver' in window) {
+  const EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
+  const STAGGER = 90; // ms between blocks that come into view together
+  const WORD_STAGGER = 40; // ms between the words of a heading
+
+  // words: heading, split into words · up: block, rises out of a blur · rise: same without the blur
+  // (cards, logos, images) · banner: dark banner, unclips from an inset frame
+  const REVEALS = [
+    ['.build__banner', 'banner'],
+    ['.build__title .tag', 'up'],
+    ['.build__title h2', 'words'],
+    ['.build__content .link', 'up'],
+    ['.build__art', 'rise'],
+    ['.trust__titles > *', 'words'],
+    ['.trust__sub', 'up'],
+    ['.logo-row img', 'rise'],
+    ['.security', 'up'],
+    ['.about__tag', 'up'],
+    ['.impact__banner', 'banner'],
+    ['.impact__top .tag', 'up'],
+    ['.impact__titles h2', 'words'],
+    ['.impact__lead', 'up'],
+    ['.impact__case-label', 'up'],
+    ['.impact-card', 'rise'],
+    ['.impact__stats > .btn', 'up'],
+    ['.integrations__title .tag', 'up'],
+    ['.integrations__title h2', 'words'],
+    ['.integrations__text > *', 'up'],
+    ['.integrations__grid', 'rise'], // one block: its grey background draws the lines between the tiles
+    ['.roi', 'up'],
+    ['.faq__heading', 'words'],
+    ['.faq__sub', 'up'],
+    ['.faq-item', 'up'],
+    ['.cta__banner', 'banner'],
+    ['.cta__eyebrow', 'up'],
+    ['.cta__title h2', 'words'],
+    ['.big-btn', 'up'],
+    ['.cta__aside', 'up'],
+    ['.footer__socials', 'up'],
+    ['.footer__wordmark', 'rise'],
+    ['.footer__legal', 'up'],
+    ['.footer__logos', 'rise'],
+  ];
+
+  // Wraps every word of the heading's text in an inline-block span (each text run goes into one
+  // wrapper span, so a flex heading keeps its spaces). Images inside the heading play as words too.
+  const splitWords = (heading) => {
+    const nodes = [];
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.nodeType === Node.TEXT_NODE ? node.textContent.trim() : node.tagName === 'IMG') nodes.push(node);
+    }
+    const pieces = [];
+    nodes.forEach((node) => {
+      if (node.nodeType !== Node.TEXT_NODE) {
+        pieces.push(node);
+        return;
+      }
+      const run = document.createElement('span');
+      node.textContent.split(/(\s+)/).forEach((part) => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          run.append(part);
+        } else {
+          const word = document.createElement('span');
+          word.className = 'reveal-word';
+          word.textContent = part;
+          run.append(word);
+          pieces.push(word);
+        }
+      });
+      node.replaceWith(run);
+    });
+    return pieces;
+  };
+
+  const KEYFRAMES = {
+    up: [{ offset: 0, opacity: 0, translate: '0 32px', filter: 'blur(6px)' }],
+    rise: [{ offset: 0, opacity: 0, translate: '0 32px' }],
+    word: [{ offset: 0, opacity: 0, translate: '0 0.3em', filter: 'blur(10px)' }],
+    banner: [
+      { clipPath: 'inset(6% 4% round 16px)', opacity: 0 },
+      { offset: 0.35, opacity: 1 },
+      { clipPath: 'inset(0% 0% round 16px)', opacity: 1 },
+    ],
+  };
+
+  const pending = new Map(); // element → { kind, words }
+  const vh = window.innerHeight;
+  REVEALS.forEach(([selector, kind]) => {
+    document.querySelectorAll(selector).forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < vh && rect.bottom > 0) return; // already on screen (opened at an anchor)
+      pending.set(el, { kind, words: kind === 'words' ? splitWords(el) : null });
+      el.classList.add('reveal-wait');
+    });
+  });
+
+  let observer;
+  const play = (elements) => {
+    elements
+      .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+      .forEach((el, i) => {
+        const { kind, words } = pending.get(el);
+        pending.delete(el);
+        observer.unobserve(el);
+        const delay = i * STAGGER;
+        // fill: backwards holds the first frame through the delay; afterwards the element is back
+        // to its own styles, so hovers and transitions are untouched.
+        if (kind === 'words') {
+          words.forEach((word, j) => word.animate(KEYFRAMES.word, {
+            duration: 1000, delay: delay + j * WORD_STAGGER, easing: EASE, fill: 'backwards',
+          }));
+        } else {
+          el.animate(KEYFRAMES[kind], {
+            duration: kind === 'banner' ? 1200 : 1000, delay, easing: EASE, fill: 'backwards',
+          });
+        }
+        el.classList.remove('reveal-wait');
+      });
+  };
+
+  // Starts once the top of a block is 10% of the screen above the bottom edge.
+  observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting && pending.has(entry.target)).map((entry) => entry.target);
+    if (visible.length) play(visible);
+  }, { rootMargin: '0px 0px -10% 0px' });
+  pending.forEach((_, el) => observer.observe(el));
+
+  // At the very end of the page the last blocks may never get 10% above the bottom edge.
+  window.addEventListener('scroll', () => {
+    if (pending.size && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      play([...pending.keys()].filter((el) => el.getBoundingClientRect().top < window.innerHeight));
+    }
+  }, { passive: true });
+}
+
 // Load progress shown by the loader: 0..1 per resource. The video entry is reset to 0 only when
 // the scrub actually loads it.
 const loadProgress = { fonts: 0, poster: 0, video: 1 };

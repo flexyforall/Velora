@@ -471,6 +471,12 @@ html.is-loading .loader {
   mask: repeating-linear-gradient(to right, #000 0 1px, transparent 1px 2px);
 }
 
+/* ---------- section reveal (js/main.js) ---------- */
+
+/* Blocks waiting below the fold; the animation itself runs from JS (Web Animations). */
+.reveal-wait { opacity: 0; }
+.reveal-word { display: inline-block; }
+
 /* ---------- hero ---------- */
 
 .hero {
