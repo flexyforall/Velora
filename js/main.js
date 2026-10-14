@@ -325,24 +325,38 @@ if (video && canPlayVideo && !reduceMotion) {
   update();
 }
 
-// Compact header: appears once the hero menu is gone (faded out by the scrub, or scrolled past),
-// and turns white while a dark banner (data-header="light") is behind the middle of the bar.
+// Compact header: slides in when the page is scrolled up and away when it is scrolled down, and stays
+// hidden while the hero menu is on screen (until the scrub fades it out, or until it scrolls past).
+// It turns white while a dark banner (data-header="light") is behind the middle of the bar.
 const siteHeader = document.querySelector('.site-header');
 
 if (siteHeader) {
-  const bar = siteHeader.querySelector('.site-header__menu');
+  const SCROLL_STEP = 6; // px of travel in one direction before the header reacts
   let ticking = false;
+  let lastY = window.scrollY;
+  let isShown = false;
 
   const update = () => {
     ticking = false;
+    const y = window.scrollY;
+    const maxY = document.documentElement.scrollHeight - window.innerHeight;
     const isScrub = intro?.classList.contains('is-scrub');
     const threshold = isScrub
       ? intro.offsetTop + heroOverflow() + (intro.offsetHeight - hero.offsetHeight) * OVERLAY_FADE_END
       : 70;
-    siteHeader.classList.toggle('is-visible', window.scrollY > threshold);
 
-    const rect = bar.getBoundingClientRect();
-    const behind = document.elementsFromPoint(window.innerWidth / 2, rect.top + rect.height / 2)
+    if (y <= threshold) {
+      isShown = false;
+      lastY = y;
+    } else if (Math.abs(y - lastY) >= SCROLL_STEP) {
+      // Ignore the rubber-band bounce past the end of the page.
+      if (y <= maxY) isShown = y < lastY;
+      lastY = y;
+    }
+    siteHeader.classList.toggle('is-visible', isShown);
+
+    // Check what is behind the bar's resting place (the header box is 100px tall, the bar sits in its middle).
+    const behind = document.elementsFromPoint(window.innerWidth / 2, siteHeader.offsetHeight / 2)
       .find((el) => !siteHeader.contains(el));
     siteHeader.classList.toggle('is-light', Boolean(behind?.closest('[data-header="light"]')));
   };

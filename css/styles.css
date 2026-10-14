@@ -709,8 +709,9 @@ html.is-loading .loader {
 
 /* ---------- compact header (Figma «menu», type Small — frame «second», 1057:21749) ---------- */
 
-/* Pinned to the top once the hero menu has scrolled or faded away. Dark logo and links on the
-   frosted bar by default; over the dark banners (data-header="light") they turn white. */
+/* Slides down from the top when the page is scrolled up (js/main.js) and back up when it is scrolled
+   down. Dark logo and links on the frosted bar by default; over the dark banners
+   (data-header="light") they turn white. */
 .site-header {
   position: fixed;
   top: 0;
@@ -723,15 +724,15 @@ html.is-loading .loader {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-12px);
-  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+  transform: translateY(-100%);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.3, 0, 0.2, 1), visibility 0s linear 0.35s;
 }
 
 .site-header.is-visible {
   opacity: 1;
   visibility: visible;
   transform: none;
-  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.3, 0, 0.2, 1), visibility 0s;
 }
 
 .site-header__menu {
