@@ -17,18 +17,41 @@ faqItems.forEach((item) => {
   });
 });
 
+// Agents: the data card of a slide builds up when the slide comes on screen — the card rises in,
+// then its rows, dividers and figures appear one after another.
+const CARD_GROUPS = '.flow-card__steps, .agent-card__group, .steps, .metrics, .call, .denials, .invoices, .record';
+const cardRows = (el) => [...el.children].flatMap((child) => (child.matches(CARD_GROUPS) ? cardRows(child) : [child]));
+
+const playAgentCard = (slide) => {
+  const card = slide?.querySelector('.flow-card, .agent-card');
+  if (!card || reduceMotion || !card.animate) return;
+  const ease = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
+  card.getAnimations?.({ subtree: true }).forEach((animation) => animation.cancel());
+  // The card is frosted glass (backdrop-filter), so it only fades and rises; the rows also unblur.
+  card.animate([{ offset: 0, opacity: 0, translate: '0 16px' }], { duration: 700, easing: ease, fill: 'backwards' });
+  cardRows(card).forEach((row, i) => {
+    const keyframes = row.classList.contains('card-line')
+      ? [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }] // dividers draw from the left
+      : [{ offset: 0, opacity: 0, translate: '0 10px', filter: 'blur(4px)' }];
+    row.animate(keyframes, { duration: 600, delay: 150 + i * 70, easing: ease, fill: 'backwards' });
+  });
+};
+
 // Agents: the side tabs switch the slide shown in the white panel.
 const agentTabs = [...document.querySelectorAll('.agents__tabs [role="tab"]')];
+const agentSlide = (index) => document.getElementById(agentTabs[index].getAttribute('aria-controls'));
 
-const selectAgent = (index, { focus = false } = {}) => {
+const selectAgent = (index, { focus = false, animate = true } = {}) => {
+  const isNew = !agentTabs[index].classList.contains('is-active');
   agentTabs.forEach((tab, i) => {
     const isActive = i === index;
     tab.classList.toggle('is-active', isActive);
     tab.setAttribute('aria-selected', String(isActive));
     tab.tabIndex = isActive ? 0 : -1;
-    document.getElementById(tab.getAttribute('aria-controls')).classList.toggle('is-active', isActive);
+    agentSlide(i).classList.toggle('is-active', isActive);
   });
   if (focus) agentTabs[index].focus();
+  if (isNew && animate) playAgentCard(agentSlide(index));
 };
 
 agentTabs.forEach((tab, i) => {
@@ -400,9 +423,12 @@ if (video && canPlayVideo && !reduceMotion) {
     hero.classList.toggle('is-ticks', progress >= OVERLAY_FADE_END && progress < VIDEO_END);
     setTick(Math.round(Math.min(1, progress / VIDEO_END) * (ticks.length - 1)));
     const isDone = distance > 0 && scrolled >= distance - 0.5;
+    const wasDone = intro.classList.contains('is-done');
     // The video ends on the Gaia slide, so scrolling back into it brings the tabs back to Gaia.
-    if (!isDone && intro.classList.contains('is-done')) selectAgent(0);
+    if (!isDone && wasDone) selectAgent(0, { animate: false });
     intro.classList.toggle('is-done', isDone);
+    // The real section takes over from the last frame: its card builds up.
+    if (isDone && !wasDone) playAgentCard(document.querySelector('.agent-slide.is-active'));
 
     if (video.duration) {
       targetTime = timeAt(progress, video.duration);
@@ -459,6 +485,19 @@ if (video && canPlayVideo && !reduceMotion) {
   update();
 }
 
+// Without the scroll video the Agents section scrolls in like any other: build up its card once,
+// just before the card itself comes into view.
+const agentsSection = document.querySelector('.agents');
+
+if (agentsSection && !reduceMotion && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    if (!intro?.classList.contains('is-scrub')) playAgentCard(document.querySelector('.agent-slide.is-active'));
+  }, { rootMargin: '0px 0px -10% 0px' });
+  observer.observe(agentsSection);
+}
+
 // Compact header: slides in when the page is scrolled up and away when it is scrolled down, and stays
 // hidden while the hero menu is on screen (until the scrub fades it out, or until it scrolls past).
 // It turns white while a dark banner (data-header="light") is behind the middle of the bar.
@@ -489,7 +528,7 @@ if (siteHeader) {
     }
     siteHeader.classList.toggle('is-visible', isShown);
 
-    // Check what is behind the bar's resting place (the header box is 100px tall, the bar sits in its middle).
+    // Check what is behind the bar's resting place (the middle of the header box).
     const behind = document.elementsFromPoint(window.innerWidth / 2, siteHeader.offsetHeight / 2)
       .find((el) => !siteHeader.contains(el));
     siteHeader.classList.toggle('is-light', Boolean(behind?.closest('[data-header="light"]')));

@@ -725,7 +725,8 @@ html.is-loading .loader {
 
 /* Slides down from the top when the page is scrolled up (js/main.js) and back up when it is scrolled
    down. Dark logo and links on the frosted bar by default; over the dark banners
-   (data-header="light") they turn white. */
+   (data-header="light") they turn white. A compact version of the Figma bar (about 80% of it:
+   49px tall instead of 64px), so it does not weigh on the content while scrolling. */
 .site-header {
   position: fixed;
   top: 0;
@@ -734,7 +735,7 @@ html.is-loading .loader {
   z-index: 50;
   display: flex;
   justify-content: center;
-  padding: 18px 12px;
+  padding: 12px;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -752,8 +753,8 @@ html.is-loading .loader {
 .site-header__menu {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 12px;
+  gap: 20px;
+  padding: 8px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.2);
   /* Figma «Glass» effect: frosted backdrop (radius 4) + two drop shadows. */
@@ -766,15 +767,15 @@ html.is-loading .loader {
 .site-header__logo {
   position: relative;
   display: block;
-  width: 146px;
-  height: 38px;
+  width: 115px;
+  height: 30px;
 }
 
 .site-header__logo img {
   position: absolute;
   inset: 0;
-  width: 146px;
-  height: 38px;
+  width: 115px;
+  height: 30px;
   transition: opacity 0.3s ease;
 }
 
@@ -785,7 +786,26 @@ html.is-loading .loader {
 .site-header__right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+}
+
+.site-header .menu__link,
+.site-header .btn--menu .btn-label {
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: -0.28px;
+}
+
+.site-header .menu__link { padding: 6px 10px; }
+
+.site-header .btn--menu {
+  gap: 8px;
+  padding: 6px 10px 6px 14px;
+}
+
+.site-header .btn--menu img {
+  width: 10px;
+  height: 10px;
 }
 
 .site-header .menu__link { color: var(--text-secondary-inverted); transition: color 0.3s ease; }
@@ -2324,9 +2344,29 @@ button.faq-item__q { cursor: pointer; }
   left: calc(50% - 9.5px);
   width: 1211px;
   height: 315.057px;
-  max-width: none;
   transform: translate(-50%, -50%);
 }
+
+.footer__wordmark-img {
+  display: block;
+  width: 1211px;
+  height: 315.057px;
+  max-width: none;
+}
+
+/* The logo layer («Union») inside the 1211 × 315 frame; the frame is white at 50% opacity. */
+.footer__wordmark-canvas {
+  position: absolute;
+  top: 53.751px;
+  left: 45.73px;
+  width: 1132.253px;
+  height: 236.505px;
+  opacity: 0;
+}
+
+.footer__wordmark.is-live { background: #fff; }
+.footer__wordmark.is-live .footer__wordmark-img { opacity: 0; }
+.footer__wordmark.is-live .footer__wordmark-canvas { opacity: 0.5; }
 
 .footer__legal {
   position: absolute;
