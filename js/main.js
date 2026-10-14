@@ -205,9 +205,15 @@ const TIME_KEYS = [[0, 0], [0.4, 5.3], [0.48, 6.2], [0.72, 7.3], [VIDEO_END, nul
 const CHAPTER = [0.47, 0.73];
 
 // On screens shorter than the 810px hero the pinned hero sits higher by the difference, so its
-// bottom (the hero buttons, the chapter copy, the ticks) stays in view. The first `overflow` px of
-// scroll only bring that bottom up; the scrub starts after them.
+// bottom (the hero buttons, the chapter copy, the ticks) stays in view; the first `overflow` px of
+// scroll only bring that bottom up. While the camera moves into the monitor the picture slides down
+// by the same amount, so the last frame — and the Agents section after it — are aligned to the top
+// of the screen, as in the layout. The scrub ends where the Agents section reaches the top.
 const heroOverflow = () => (hero ? Math.max(0, hero.offsetHeight - window.innerHeight) : 0);
+const scrubRange = () => {
+  const overflow = heroOverflow();
+  return { overflow, start: overflow, length: Math.max(0, intro.offsetHeight - hero.offsetHeight - overflow) };
+};
 
 // Browsers without H.264 (some Linux Chromium builds) keep the static hero.
 const canPlayVideo = video?.canPlayType('video/mp4; codecs="avc1.640033"') !== '';
@@ -247,11 +253,14 @@ if (video && canPlayVideo && !reduceMotion) {
 
   const update = () => {
     ticking = false;
-    const overflow = heroOverflow();
+    const { overflow, start, length: distance } = scrubRange();
     document.documentElement.style.setProperty('--hero-overflow', `${overflow}px`);
-    const distance = intro.offsetHeight - hero.offsetHeight;
-    const scrolled = Math.min(Math.max(-intro.getBoundingClientRect().top - overflow, 0), distance);
+    const scrolled = Math.min(Math.max(-intro.getBoundingClientRect().top - start, 0), distance);
     const progress = distance > 0 ? scrolled / distance : 0;
+
+    // Short screens: bottom-aligned picture until the chapter copy is gone, top-aligned by the last frame.
+    const align = Math.min(1, Math.max(0, (progress - CHAPTER[1]) / (VIDEO_END - CHAPTER[1])));
+    hero.style.setProperty('--media-shift', `${overflow * align * align * (3 - 2 * align)}px`);
 
     // Wider than the 1440 frame: cover the screen, then settle to the exact layout while the
     // final frame is held, so it lines up with the Agents section underneath.
@@ -287,6 +296,7 @@ if (video && canPlayVideo && !reduceMotion) {
     intro.classList.remove('is-scrub', 'is-done');
     hero.classList.remove('is-chapter', 'is-ticks');
     document.documentElement.style.removeProperty('--hero-overflow');
+    hero.style.removeProperty('--media-shift');
     window.removeEventListener('scroll', requestUpdate);
     window.removeEventListener('resize', requestUpdate);
     video.remove();
@@ -341,9 +351,8 @@ if (siteHeader) {
     const y = window.scrollY;
     const maxY = document.documentElement.scrollHeight - window.innerHeight;
     const isScrub = intro?.classList.contains('is-scrub');
-    const threshold = isScrub
-      ? intro.offsetTop + heroOverflow() + (intro.offsetHeight - hero.offsetHeight) * OVERLAY_FADE_END
-      : 70;
+    const range = isScrub && scrubRange();
+    const threshold = isScrub ? intro.offsetTop + range.start + range.length * OVERLAY_FADE_END : 70;
 
     if (y <= threshold) {
       isShown = false;

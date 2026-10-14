@@ -518,7 +518,7 @@ html.is-loading .loader {
   /* Seen only beside the video on screens wider than 1440 while the last frame settles:
      replicates the Agents section outside its 1440px frame (dark, white panel from y=30 on the right). */
   background:
-    linear-gradient(#fff, #fff) right 0 top 30px / max(0px, calc((100% - var(--frame)) / 2)) 800px no-repeat,
+    linear-gradient(#fff, #fff) right 0 top calc(30px + var(--media-shift, 0px)) / max(0px, calc((100% - var(--frame)) / 2)) 800px no-repeat,
     var(--bg-accent-dark);
 }
 
@@ -527,6 +527,7 @@ html.is-loading .loader {
 .intro.is-scrub .hero__media {
   top: 0;
   height: 810px;
+  transform: translateY(var(--media-shift, 0px));
 }
 
 .intro.is-scrub .hero__poster,
@@ -550,8 +551,6 @@ html.is-loading .loader {
 
 .intro.is-scrub + main .agents {
   margin-top: -810px;
-  /* A jump to #agents lands where the pinned hero lets go, so the handoff is complete there. */
-  scroll-margin-top: calc(-1 * var(--hero-overflow, 0px));
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0s linear 0.3s;
