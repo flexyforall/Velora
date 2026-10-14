@@ -329,18 +329,24 @@ if (loader && document.documentElement.classList.contains('is-loading')) {
     });
   };
 
-  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  // Quadratic in-out: a short ease at the end, so the image doesn't crawl into the last pixels.
+  const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  const tween = (from, to, duration, onFrame) => new Promise((resolve) => {
+  // One eased motion through several rects: `stops` are the eased progress values at which each
+  // rect is reached, so intermediate rects are passed through without slowing down.
+  const tween = (rects, stops, duration, onFrame) => new Promise((resolve) => {
     const start = performance.now();
     const step = (now) => {
       const t = Math.min(1, (now - start) / duration);
       const e = easeInOut(t);
+      let i = 0;
+      while (i < rects.length - 2 && e > stops[i + 1]) i += 1;
+      const local = (e - stops[i]) / (stops[i + 1] - stops[i]);
       const rect = {};
-      Object.keys(from).forEach((key) => { rect[key] = lerp(from[key], to[key], e); });
+      Object.keys(rects[0]).forEach((key) => { rect[key] = lerp(rects[i][key], rects[i + 1][key], local); });
       setRect(rect);
-      onFrame?.(t);
+      onFrame?.(e);
       if (t < 1) requestAnimationFrame(step);
       else resolve();
     };
@@ -359,8 +365,13 @@ if (loader && document.documentElement.classList.contains('is-loading')) {
     const heroRect = hero.getBoundingClientRect();
     const full = { x: heroRect.left, y: heroRect.top, w: heroRect.width, h: heroRect.height, radius: 0, padX: 19, padY: 22 };
 
-    await tween(loadingRect(100, vp), wide, 800);
-    await tween(wide, full, 600, (t) => { frame.style.opacity = String(1 - t); });
+    // Grow through the near-full-screen frame into the hero in one go. The middle rect sits where
+    // the width says it should, so the speed stays even and there is no pause on it.
+    const start = loadingRect(100, vp);
+    const mid = Math.min(0.95, Math.max(0.5, (wide.w - start.w) / (full.w - start.w)));
+    await tween([start, wide, full], [0, mid, 1], 1000, (e) => {
+      frame.style.opacity = String(1 - Math.min(1, Math.max(0, (e - mid) / (1 - mid))));
+    });
 
     // Hand over to the hero: its copy fades in while the white loader fades out.
     loader.style.display = 'block';

@@ -270,7 +270,8 @@ button {
 
 .btn--dark .btn-label,
 .btn--glass .btn-label,
-.link--light .btn-label {
+.link--light .btn-label,
+.menu__link .btn-label {
   --label: 255, 255, 255;
 }
 
@@ -282,7 +283,8 @@ button {
 
 .btn:hover .btn-label,
 .link:hover .btn-label,
-.big-btn:hover .btn-label {
+.big-btn:hover .btn-label,
+.menu__link:hover .btn-label {
   background-image: linear-gradient(90deg,
     rgba(var(--label), 1) 0%,
     rgba(var(--label), 1) 33.33%,
@@ -363,7 +365,8 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .btn:hover .btn-label,
   .link:hover .btn-label,
-  .big-btn:hover .btn-label { animation: none; }
+  .big-btn:hover .btn-label,
+  .menu__link:hover .btn-label { animation: none; }
   .btn:hover .ai-icon__glyph { transform: none; }
 }
 
