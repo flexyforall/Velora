@@ -17,7 +17,7 @@
 | Папка | Секция на макете | Статус |
 | --- | --- | --- |
 | `common/` | Общие элементы (логотип в меню, стрелки) | ✅ загружено |
-| `hero/` | Hero — «Effortless Healthcare Operations» | ✅ загружено |
+| `hero/` | Hero — «Effortless Healthcare Operations» | ✅ загружено, ⏳ ждём фоновое видео `hero-bg.mp4` |
 | `agents/` | Agents — вкладки и карточка Gaia | ✅ загружено |
 | `build/` | Баннер «Build workflows specific to your organization…» | ✅ загружено |
 | `partners/` | Логотипы партнёров (Stanford, NVIDIA, Intel…) — используются в двух секциях | ⏳ нужно загрузить |
