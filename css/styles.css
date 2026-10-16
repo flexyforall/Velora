@@ -187,6 +187,8 @@ button {
 .tag--accent .tag__dot { background: var(--bg-accent); }
 .tag--glass { color: var(--text-tertiary); }
 .tag--glass .tag__dot { background: var(--bg-glass-hover); }
+.tag--accent-light { color: var(--text-accent-light); }
+.tag--accent-light .tag__dot { background: var(--bg-accent-light); }
 
 .btn {
   position: relative;
