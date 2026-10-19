@@ -187,8 +187,6 @@ button {
 .tag--accent .tag__dot { background: var(--bg-accent); }
 .tag--glass { color: var(--text-tertiary); }
 .tag--glass .tag__dot { background: var(--bg-glass-hover); }
-.tag--accent-light { color: var(--text-accent-light); }
-.tag--accent-light .tag__dot { background: var(--bg-accent-light); }
 
 .btn {
   position: relative;
@@ -1566,7 +1564,7 @@ html.is-loading .loader {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  height: 293px;
   padding: 42px;
   overflow: hidden;
   border-radius: 16px;
@@ -1601,12 +1599,14 @@ html.is-loading .loader {
 .build__vline--1 { left: 22px; }
 .build__vline--2 { left: calc(50% + 181px); }
 
+/* Title at the top of the banner, «Build with Wedge» at the bottom. */
 .build__content {
   position: relative;
   display: flex;
+  flex: 1 0 0;
   flex-direction: column;
   align-items: flex-start;
-  gap: 80px;
+  justify-content: space-between;
   width: 699px;
 }
 
@@ -1614,9 +1614,13 @@ html.is-loading .loader {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 6px;
+  width: 100%;
   color: var(--text-primary);
 }
+
+.build__title h2 { white-space: nowrap; }
+.build__lead { color: var(--text-secondary); }
 
 .build__art {
   position: absolute;
