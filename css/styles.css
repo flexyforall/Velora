@@ -1830,7 +1830,7 @@ html.is-loading .loader {
   padding: 100px 60px;
   overflow: hidden;
   border-radius: 16px;
-  background: url("../assets/impact/banner.png") center / cover no-repeat;
+  background: url("../assets/impact/banner.png?v=20261019-7") center / cover no-repeat;
   color: var(--text-primary);
 }
 
@@ -2227,7 +2227,7 @@ button.faq-item__q { cursor: pointer; }
   margin: 0 auto;
   overflow: hidden;
   border-radius: 16px;
-  background: url("../assets/cta/CTA.png") center / cover no-repeat;
+  background: url("../assets/cta/CTA.png?v=20261019-7") center / cover no-repeat;
   color: var(--text-primary);
 }
 
