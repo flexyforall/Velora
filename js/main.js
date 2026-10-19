@@ -247,8 +247,8 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
   // (cards, logos, images) · fade: opacity only · banner: dark banner, unclips from an inset frame
   const REVEALS = [
     ['.build__banner', 'banner'],
-    ['.build__title .tag', 'up'],
     ['.build__title h2', 'words'],
+    ['.build__lead', 'up'],
     ['.build__content .link', 'up'],
     ['.build__art', 'rise'],
     ['.trust__titles > *', 'words'],
