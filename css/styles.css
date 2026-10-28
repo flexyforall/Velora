@@ -615,51 +615,23 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .assistant__cta { display: flex; flex: none; padding: 8px; border-radius: 100px; }
 .assistant__cta img { width: 12px; height: 12px; }
 
-/* Glass tags (home-1) → tab row (home-2). Each tag is anchored at its icon's top-left;
-   --ax/--ay are the home-1 coordinates, --bx/--by the home-2 ones (inline in index.html).
-   Instead of travelling across the dashboard, the floating tags dissolve early in the
-   scroll (--out) and the tab row materialises in place near the end, one tab after
-   another (--in). --st flips from the floating to the row layout while both are invisible. */
-.tags { position: absolute; inset: 0; pointer-events: none; }
-
-.tag {
+/* Floating glass tags (home-1), anchored at the icon's top-left (--ax/--ay inline in
+   index.html). While scrolling, main.js moves each tag towards the dashboard and shrinks it
+   (--fx, --fy, --fs) so it slips behind the white card, then fades it out (--fo). */
+.ftags { position: absolute; inset: 0; pointer-events: none; }
+.ftag {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: calc(var(--ax) * 1px);
+  top: calc(var(--ay) * 1px);
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
   color: var(--ink);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  pointer-events: auto;
-  --st: clamp(0, (var(--p) - .5) * 1000, 1);
-  --out: clamp(0, var(--p) / .35, 1);
-  --in: clamp(0, (var(--p) - .62 - var(--i, 0) * .05) / .16, 1);
-  /* --row: how wide the tab row is right now (the block is still growing to 1077px) */
-  --row: calc((556 + 437 * var(--p)) / 993);
-  --fx: calc(var(--ax) + (var(--bx) - var(--ax)) * .12 * var(--out));
-  --fy: calc(var(--ay) + (var(--by) - var(--ay)) * .12 * var(--out));
-  --rx: calc(720.5 + (var(--bx) - 720.5) * var(--row));
-  --ry: calc(var(--by) + 417.5 * (1 - var(--p)) + 14 * (1 - var(--in)));
-  opacity: calc((1 - var(--out)) * (1 - var(--st)) + var(--in) * var(--st));
-  filter: blur(calc((var(--out) * (1 - var(--st)) + (1 - var(--in)) * var(--st)) * 6px));
-  transform: translate(
-    calc((var(--fx) * (1 - var(--st)) + var(--rx) * var(--st)) * 1px),
-    calc((var(--fy) * (1 - var(--st)) + var(--ry) * var(--st) - 63.5 * var(--q)) * 1px));
+  opacity: var(--fo, 1);
+  transform: translate(var(--fx, 0px), var(--fy, 0px)) scale(var(--fs, 1));
+  transform-origin: calc(var(--aw) * .5px - 7px) 16px;
 }
-.tag:nth-child(2) { --i: 1; }
-.tag:nth-child(3) { --i: 2; }
-.tag:nth-child(4) { --i: 3; }
-.tag:nth-child(5) { --i: 4; }
-.tag:focus-visible { outline: 2px solid var(--rose); outline-offset: 4px; border-radius: 999px; }
-
-.tag__pill {
+.ftag__pill {
   position: absolute;
   left: -7px;
   top: -7px;
@@ -671,30 +643,12 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   box-shadow: 0 0 20px rgba(229, 90, 127, .07);
   -webkit-backdrop-filter: blur(9px);
           backdrop-filter: blur(9px);
-  opacity: calc(1 - var(--st));
 }
-.tag--bright .tag__pill { background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, .6)); }
+.ftag--bright .ftag__pill { background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, .6)); }
+.ftag__label { position: relative; font-size: 16px; line-height: 22px; white-space: nowrap; }
 
-.tag__line {
-  position: absolute;
-  left: -6px;
-  top: -13px;
-  width: calc(var(--bw) * 1px);
-  height: 1px;
-  background: rgba(0, 0, 0, .1);
-  transform-origin: 0 0;
-  transform: scaleX(calc(var(--in) * var(--row)));
-}
-.tag__bar {
-  position: absolute;
-  left: 0;
-  top: -1px;
-  width: 0;
-  height: 1px;
-  background: #000;
-}
-
-.tag__icon {
+/* Icon disc shared by floating tags and tabs */
+.tag-icon {
   position: relative;
   display: block;
   flex: none;
@@ -703,30 +657,73 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   padding: 6px;
   border: 1px solid rgba(255, 255, 255, .2);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--c), #000 calc(var(--st) * 100%));
-  opacity: calc(1 - .5 * var(--st));
+  background: var(--c);
 }
 .tag__glyph { position: absolute; left: 6px; top: 6px; width: 18px; height: 18px; }
 .tag__glyph--fundraising { left: 7.412px; top: 7.412px; width: 15.177px; height: 15.177px; }
 .tag__glyph--donor { left: 7.837px; width: 14.166px; height: 18.622px; }
 .tag__glyph--grant { left: 5.923px; top: 9.361px; width: 17.994px; height: 11.817px; }
 
-.tag__label {
-  position: relative;
-  font-size: 16px;
-  line-height: 22px;
-  white-space: nowrap;
-  opacity: calc(1 - .3 * var(--st));
+/* Tab row (home-2): bottom of the product block, 42px from its sides and 18px from its
+   bottom, so it grows and moves with the block. Each tab materialises on its own near the
+   end of the scroll (--in), left to right. */
+.tabs {
+  position: absolute;
+  left: 42px;
+  right: 42px;
+  bottom: 18px;
+  display: flex;
+  justify-content: space-between;
 }
+.tab {
+  --in: clamp(0, (var(--p) - .62 - var(--i, 0) * .05) / .16, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 13px 16px 12px 6px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: var(--in);
+  translate: 0 calc((1 - var(--in)) * 14px);
+  filter: blur(calc((1 - var(--in)) * 6px));
+}
+.tab:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; border-radius: 8px; }
+.hero:not(.is-tabs) .tab { pointer-events: none; }
 
-.tag.is-active .tag__icon { background: var(--c); opacity: 1; }
-.tag.is-active .tag__label { color: #000; opacity: 1; }
+.tab__line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, .1);
+  transform-origin: 0 0;
+  transform: scaleX(var(--in));
+}
+.tab__bar {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 0;
+  height: 1px;
+  background: #000;
+}
+.tab .tag-icon { background: #000; opacity: .5; }
+.tab__label { font-size: 16px; line-height: 22px; white-space: nowrap; opacity: .7; }
+.tab.is-active .tag-icon { background: var(--c); opacity: 1; }
+.tab.is-active .tab__label { color: #000; opacity: 1; }
 
 /* Settled in home-2: tabs cycle, the bar shows the progress of the active one */
-.hero.is-tabs .tag__icon,
-.hero.is-tabs .tag__label { transition: background-color .4s ease, opacity .4s ease; }
-.hero.is-tabs .tag.is-active .tag__bar { animation: tab-progress var(--tab-time, 6s) linear forwards; }
-.hero.is-tabs .tag:not(.is-active):hover .tag__label { opacity: 1; }
+.hero.is-tabs .tab .tag-icon,
+.hero.is-tabs .tab__label { transition: background-color .4s ease, opacity .4s ease; }
+.hero.is-tabs .tab.is-active .tab__bar { animation: tab-progress var(--tab-time, 6s) linear forwards; }
+.hero.is-tabs .tab:not(.is-active):hover .tab__label { opacity: 1; }
 @keyframes tab-progress { from { width: 0; } to { width: 100%; } }
 
 /* ------------------------------------------------------------------ Trusted by (508:260) */
@@ -949,11 +946,11 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .reveal .hero__ctas { --d: 420ms; }
 .reveal .product,
 .reveal .product__screen { --d: 520ms; }
-.reveal .tag:nth-child(1) { --d: 760ms; }
-.reveal .tag:nth-child(2) { --d: 840ms; }
-.reveal .tag:nth-child(3) { --d: 920ms; }
-.reveal .tag:nth-child(4) { --d: 1000ms; }
-.reveal .tag:nth-child(5) { --d: 1080ms; }
+.reveal .ftag:nth-child(1) { --d: 760ms; }
+.reveal .ftag:nth-child(2) { --d: 840ms; }
+.reveal .ftag:nth-child(3) { --d: 920ms; }
+.reveal .ftag:nth-child(4) { --d: 1000ms; }
+.reveal .ftag:nth-child(5) { --d: 1080ms; }
 
 .reveal:not(.is-ready) .header { opacity: 0; translate: 0 -16px; }
 .reveal:not(.is-ready) .hero__rays { opacity: 0; scale: 1.06; }
@@ -963,8 +960,8 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .reveal:not(.is-ready) .hero__ctas { opacity: 0; translate: 0 28px; }
 .reveal:not(.is-ready) .product,
 .reveal:not(.is-ready) .product__screen { opacity: 0; translate: 0 56px; }
-.reveal:not(.is-ready) .tag { opacity: 0; }
-.reveal.is-ready .tag { animation: tag-in 1s var(--reveal-ease) var(--d, 0ms) backwards; }
+.reveal:not(.is-ready) .ftag { opacity: 0; }
+.reveal.is-ready .ftag { animation: tag-in 1s var(--reveal-ease) var(--d, 0ms) backwards; }
 @keyframes tag-in { from { opacity: 0; translate: 0 20px; } }
 
 .reveal [data-reveal]:not(.is-visible) { opacity: 0; translate: 0 32px; }

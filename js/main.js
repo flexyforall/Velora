@@ -30,6 +30,29 @@
   hero.classList.add('hero--animated');
   root.style.setProperty('--track', `${TRACK_MORPH + TRACK_SETTLE}px`);
 
+  // Floating tags (home-1) head for the dashboard during the first half of the morph,
+  // shrink a little and slip behind the white card, fading out at the end of the trip.
+  const floating = [...document.querySelectorAll('.ftag')].map((el) => {
+    const ax = parseFloat(el.style.getPropertyValue('--ax'));
+    const ay = parseFloat(el.style.getPropertyValue('--ay'));
+    const aw = parseFloat(el.style.getPropertyValue('--aw'));
+    return { el, cx: ax - 7 + aw / 2, cy: ay - 7 + 23 };
+  });
+  function moveFloating(p) {
+    const t = clamp(p / .5);
+    const e = easeInOut(t);
+    const sx = 720 + .5 * p;            // centre of the white card at this point of the morph
+    const sy = 878.5 - 446.5 * p;
+    floating.forEach(({ el, cx, cy }) => {
+      const tx = sx + (cx - 720) * .3;
+      const ty = sy + (cy - 650) * .3;
+      el.style.setProperty('--fx', `${((tx - cx) * e).toFixed(2)}px`);
+      el.style.setProperty('--fy', `${((ty - cy) * e).toFixed(2)}px`);
+      el.style.setProperty('--fs', (1 - .2 * e).toFixed(4));
+      el.style.setProperty('--fo', (1 - clamp((t - .7) / .3)).toFixed(4));
+    });
+  }
+
   let ticking = false;
   function render() {
     ticking = false;
@@ -38,6 +61,7 @@
     const q = clamp((scrolled - TRACK_MORPH) / TRACK_SETTLE);
     root.style.setProperty('--p', p.toFixed(4));
     root.style.setProperty('--q', q.toFixed(4));
+    moveFloating(p);
     hero.classList.toggle('is-tabs', p > .999);
   }
   function requestRender() {
@@ -51,19 +75,19 @@
   render();
 
   // ---------------------------------------------------------------- Product tabs
-  // Once the tags have lined up (home-2), they work as tabs; the active one cycles.
-  const tags = [...document.querySelectorAll('.tag')];
-  function activate(tag) {
-    tags.forEach((t) => {
-      const on = t === tag;
+  // Once the tab row has appeared (home-2), the active tab cycles.
+  const tabs = [...document.querySelectorAll('.tab')];
+  function activate(tab) {
+    tabs.forEach((t) => {
+      const on = t === tab;
       t.classList.toggle('is-active', on);
       t.setAttribute('aria-selected', String(on));
     });
   }
-  tags.forEach((tag, i) => {
-    tag.addEventListener('click', () => activate(tag));
-    tag.querySelector('.tag__bar').addEventListener('animationend', () => {
-      activate(tags[(i + 1) % tags.length]);
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => activate(tab));
+    tab.querySelector('.tab__bar').addEventListener('animationend', () => {
+      activate(tabs[(i + 1) % tabs.length]);
     });
   });
 

@@ -62,43 +62,67 @@
           <div class="hero__fade" id="hero-fade"></div>
           <img class="hero__glow" id="hero-glow" src="assets/images/hero-glow.svg" width="328" height="138" alt="">
 
-          <div class="product" id="product"></div>
-
-          <!-- Glass tags: float around the product in home-1, line up as tabs in home-2 -->
-          <div class="tags" id="tags" role="tablist" aria-label="Velora products">
-            <button class="tag tag--bright is-active" type="button" role="tab" aria-selected="true" style="--c:#e55a7f; --ax:205; --ay:570; --aw:152; --bx:230; --by:704.5; --bw:150">
-              <span class="tag__pill"></span>
-              <span class="tag__line"><span class="tag__bar"></span></span>
-              <span class="tag__icon"><img class="tag__glyph tag__glyph--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span>
-              <span class="tag__label">Fundraising</span>
-            </button>
-            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#18597e; --ax:70; --ay:653; --aw:191; --bx:390.5; --by:704.5; --bw:189">
-              <span class="tag__pill"></span>
-              <span class="tag__line"><span class="tag__bar"></span></span>
-              <span class="tag__icon"><img class="tag__glyph" src="assets/icons/tag-fund-accounting.svg" alt=""></span>
-              <span class="tag__label">Fund Accounting</span>
-            </button>
-            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#e55a7f; --ax:1084; --ay:600; --aw:212; --bx:590; --by:704.5; --bw:210">
-              <span class="tag__pill"></span>
-              <span class="tag__line"><span class="tag__bar"></span></span>
-              <span class="tag__icon"><img class="tag__glyph tag__glyph--donor" src="assets/icons/tag-donor-management.svg" alt=""></span>
-              <span class="tag__label">Donor Management</span>
-            </button>
-            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#2f744f; --ax:1147; --ay:690; --aw:209; --bx:810.5; --by:704.5; --bw:207">
-              <span class="tag__pill"></span>
-              <span class="tag__line"><span class="tag__bar"></span></span>
-              <span class="tag__icon"><img class="tag__glyph tag__glyph--grant" src="assets/icons/tag-grant-management.svg" alt=""></span>
-              <span class="tag__label">Grant Management</span>
-            </button>
-            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#814dc8; --ax:230; --ay:734; --aw:197; --bx:1028; --by:704.5; --bw:195">
-              <span class="tag__pill"></span>
-              <span class="tag__line"><span class="tag__bar"></span></span>
-              <span class="tag__icon"><img class="tag__glyph" src="assets/icons/tag-mission-assistant.svg" alt=""></span>
-              <span class="tag__label">Mission Assistant</span>
-            </button>
+          <div class="product" id="product">
+            <!-- Tab row (home-2): part of the block, appears on its own near the end of the scroll -->
+            <div class="tabs" role="tablist" aria-label="Velora products">
+              <button class="tab is-active" type="button" role="tab" aria-selected="true" style="--c:#e55a7f; --i:0">
+                <span class="tab__line"><span class="tab__bar"></span></span>
+                <span class="tag-icon"><img class="tag__glyph tag__glyph--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span>
+                <span class="tab__label">Fundraising</span>
+              </button>
+              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#18597e; --i:1">
+                <span class="tab__line"><span class="tab__bar"></span></span>
+                <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-fund-accounting.svg" alt=""></span>
+                <span class="tab__label">Fund Accounting</span>
+              </button>
+              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#e55a7f; --i:2">
+                <span class="tab__line"><span class="tab__bar"></span></span>
+                <span class="tag-icon"><img class="tag__glyph tag__glyph--donor" src="assets/icons/tag-donor-management.svg" alt=""></span>
+                <span class="tab__label">Donor Management</span>
+              </button>
+              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#2f744f; --i:3">
+                <span class="tab__line"><span class="tab__bar"></span></span>
+                <span class="tag-icon"><img class="tag__glyph tag__glyph--grant" src="assets/icons/tag-grant-management.svg" alt=""></span>
+                <span class="tab__label">Grant Management</span>
+              </button>
+              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#814dc8; --i:4">
+                <span class="tab__line"><span class="tab__bar"></span></span>
+                <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-mission-assistant.svg" alt=""></span>
+                <span class="tab__label">Mission Assistant</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Dashboard sits above the tags, so they slide under it while lining up -->
+          <!-- Floating glass tags (home-1): drift into the dashboard and disappear behind it -->
+          <div class="ftags" aria-hidden="true">
+            <span class="ftag ftag--bright" style="--c:#e55a7f; --ax:205; --ay:570; --aw:152">
+              <span class="ftag__pill"></span>
+              <span class="tag-icon"><img class="tag__glyph tag__glyph--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span>
+              <span class="ftag__label">Fundraising</span>
+            </span>
+            <span class="ftag" style="--c:#18597e; --ax:70; --ay:653; --aw:191">
+              <span class="ftag__pill"></span>
+              <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-fund-accounting.svg" alt=""></span>
+              <span class="ftag__label">Fund Accounting</span>
+            </span>
+            <span class="ftag" style="--c:#e55a7f; --ax:1084; --ay:600; --aw:212">
+              <span class="ftag__pill"></span>
+              <span class="tag-icon"><img class="tag__glyph tag__glyph--donor" src="assets/icons/tag-donor-management.svg" alt=""></span>
+              <span class="ftag__label">Donor Management</span>
+            </span>
+            <span class="ftag" style="--c:#2f744f; --ax:1147; --ay:690; --aw:209">
+              <span class="ftag__pill"></span>
+              <span class="tag-icon"><img class="tag__glyph tag__glyph--grant" src="assets/icons/tag-grant-management.svg" alt=""></span>
+              <span class="ftag__label">Grant Management</span>
+            </span>
+            <span class="ftag" style="--c:#814dc8; --ax:230; --ay:734; --aw:197">
+              <span class="ftag__pill"></span>
+              <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-mission-assistant.svg" alt=""></span>
+              <span class="ftag__label">Mission Assistant</span>
+            </span>
+          </div>
+
+          <!-- Dashboard sits above the floating tags, so they slip in behind it -->
           <div class="product__screen" id="product-screen">
             <div class="card card--revenue">
               <div class="card__head">
