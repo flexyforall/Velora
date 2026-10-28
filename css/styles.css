@@ -624,9 +624,8 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .assistant__cta { display: flex; flex: none; padding: 8px; border-radius: 100px; }
 .assistant__cta img { width: 12px; height: 12px; }
 
-/* Bookkeeping column: stays empty while the dashboard is opening and fills in row by row
-   once it is fully open (.is-open, set by main.js); each status lands just after its row.
-   Scrolling back fades it out quickly. */
+/* Bookkeeping column: stays empty while the dashboard is opening and fades in as a whole
+   once it is fully open (.is-open, set by main.js). Scrolling back fades it out quickly. */
 .card--books > *,
 .books__status {
   opacity: 0;
@@ -644,16 +643,8 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
     translate .7s cubic-bezier(.33, 1, .68, 1) var(--d, 0ms),
     scale .7s cubic-bezier(.33, 1, .68, 1) var(--d, 0ms);
 }
-.card--books > :nth-child(1) { --d: 0ms; }
-.card--books > :nth-child(2) { --d: 80ms; }
-.card--books > :nth-child(3) { --d: 160ms; }
-.card--books > :nth-child(4) { --d: 240ms; }
-.card--books > :nth-child(5) { --d: 320ms; }
-.card--books > :nth-child(6) { --d: 430ms; }
-.card--books > :nth-child(2) .books__status { --d: 280ms; }
-.card--books > :nth-child(3) .books__status { --d: 360ms; }
-.card--books > :nth-child(4) .books__status { --d: 440ms; }
-.card--books > :nth-child(5) .books__status { --d: 520ms; }
+.card--books > *,
+.card--books .books__status { --d: 0ms; }
 @media (prefers-reduced-motion: reduce) {
   .card--books > *, .books__status { transition: none !important; }
 }
@@ -708,8 +699,8 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .tag__glyph--grant { left: 5.923px; top: 9.361px; width: 17.994px; height: 11.817px; }
 
 /* Tab row (home-2): bottom of the product block, 42px from its sides and 18px from its
-   bottom, so it grows and moves with the block. Each tab materialises on its own near the
-   end of the scroll (--in), left to right. */
+   bottom, so it grows and moves with the block. The whole row materialises near the end of
+   the scroll (--in). */
 .tabs {
   position: absolute;
   left: 42px;
@@ -719,7 +710,7 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   justify-content: space-between;
 }
 .tab {
-  --in: clamp(0, (var(--p) - .62 - var(--i, 0) * .05) / .16, 1);
+  --in: clamp(0, (var(--p) - .7) / .22, 1);
   position: relative;
   display: flex;
   align-items: center;
@@ -960,8 +951,9 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 
 /* ------------------------------------------------------------------ Reveal */
 /* Hidden starting states exist only while html.reveal is set (JS on, motion allowed).
-   The hero assembles when the loader leaves (html.is-ready); [data-reveal] blocks
-   appear as they scroll into view (.is-visible, set by main.js). Only opacity,
+   The hero appears all at once when the loader leaves (html.is-ready); [data-reveal]
+   blocks appear as they scroll into view (.is-visible, set by main.js). Elements start
+   from a faint 25% rather than invisible, so they settle in instead of popping up. Only opacity,
    translate, scale and filter animate, so the scroll-driven transforms stay intact. */
 
 .logo__in { display: flex; align-items: center; justify-content: center; max-width: 100%; }
@@ -987,31 +979,20 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   --reveal-fade: cubic-bezier(.4, 0, .2, 1);
 }
 
-.reveal .hero__line1 { --d: 80ms; }
-.reveal .hero__line2 { --d: 180ms; }
-.reveal .hero__sub { --d: 300ms; }
-.reveal .hero__ctas { --d: 400ms; }
-.reveal .product,
-.reveal .product__screen { --d: 500ms; }
-.reveal .ftag:nth-child(1) { --d: 700ms; }
-.reveal .ftag:nth-child(2) { --d: 770ms; }
-.reveal .ftag:nth-child(3) { --d: 840ms; }
-.reveal .ftag:nth-child(4) { --d: 910ms; }
-.reveal .ftag:nth-child(5) { --d: 980ms; }
 
-.reveal:not(.is-ready) .header { opacity: 0; translate: 0 -12px; }
-.reveal:not(.is-ready) .hero__rays { opacity: 0; scale: 1.04; }
+.reveal:not(.is-ready) .header { opacity: .25; translate: 0 -12px; }
+.reveal:not(.is-ready) .hero__rays { opacity: .2; scale: 1.04; }
 .reveal:not(.is-ready) .hero__line1,
-.reveal:not(.is-ready) .hero__line2 { opacity: 0; translate: 0 20px; filter: blur(8px); }
+.reveal:not(.is-ready) .hero__line2 { opacity: .25; translate: 0 20px; filter: blur(8px); }
 .reveal:not(.is-ready) .hero__sub,
-.reveal:not(.is-ready) .hero__ctas { opacity: 0; translate: 0 20px; filter: blur(4px); }
+.reveal:not(.is-ready) .hero__ctas { opacity: .25; translate: 0 20px; filter: blur(4px); }
 .reveal:not(.is-ready) .product,
-.reveal:not(.is-ready) .product__screen { opacity: 0; translate: 0 40px; }
-.reveal:not(.is-ready) .ftag { opacity: 0; }
+.reveal:not(.is-ready) .product__screen { opacity: .25; translate: 0 40px; }
+.reveal:not(.is-ready) .ftag { opacity: .25; }
 .reveal.is-ready .ftag { animation: tag-in .9s var(--reveal-fade) var(--d, 0ms) backwards; }
-@keyframes tag-in { from { opacity: 0; translate: 0 14px; filter: blur(6px); } }
+@keyframes tag-in { from { opacity: .25; translate: 0 14px; filter: blur(6px); } }
 
-.reveal [data-reveal]:not(.is-visible) { opacity: 0; translate: 0 24px; filter: blur(6px); }
+.reveal [data-reveal]:not(.is-visible) { opacity: .25; translate: 0 24px; filter: blur(6px); }
 
 /* ------------------------------------------------------------------ Narrow screens */
 
