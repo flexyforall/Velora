@@ -255,13 +255,67 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px;
   font-weight: 500;
   box-shadow:
+    0 0 0 0 rgba(233, 230, 231, 0),
     0 6px 14px rgba(24, 24, 24, .14),
     inset 0 1px 1px rgba(255, 255, 255, .2),
     inset -10px 2px 10px rgba(229, 90, 127, .28),
     inset -2px -1px 4px rgba(240, 106, 143, .75);
 }
-.btn-primary img, .cta--primary img { transition: transform .25s ease; }
-.btn-primary:hover img, .cta--primary:hover img { transform: translateX(2px); }
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  box-shadow:
+    0 0 0 3px var(--line),
+    0 6px 14px rgba(24, 24, 24, .14),
+    inset 0 1px 1px rgba(255, 255, 255, .2),
+    inset -10px 2px 10px rgba(229, 90, 127, .28),
+    inset -2px -1px 4px rgba(240, 106, 143, .75);
+}
+
+/* Primary button motion: a brand-coloured light runs round the edge (thin rim + soft
+   inner glow), and on hover the chevron grows its stem into an arrow. */
+@property --btn-angle { syntax: '<angle>'; inherits: true; initial-value: 0deg; }
+
+.btn-primary, .cta--primary { position: relative; isolation: isolate; transition: box-shadow .3s ease; }
+.btn-fx {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  animation: btn-spin 5s linear infinite;
+}
+.btn-fx__glow { position: absolute; inset: 0; border-radius: inherit; filter: blur(6px); opacity: .6; }
+.btn-fx__glow i,
+.btn-fx__rim {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(from var(--btn-angle),
+    rgba(229, 90, 127, 0) 0deg, #e55a7f 50deg, #f28aa4 90deg, rgba(240, 106, 143, 0) 150deg,
+    rgba(230, 89, 70, 0) 190deg, #e65946 230deg, #f9a296 270deg, rgba(230, 89, 70, 0) 330deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.btn-fx__glow i { padding: 5px; }
+.btn-fx__rim { padding: 1px; opacity: .9; }
+@keyframes btn-spin { to { --btn-angle: 360deg; } }
+
+.btn-arrow { flex: none; overflow: visible; }
+.btn-arrow path { stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-arrow__stem {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  transition: stroke-dashoffset .35s cubic-bezier(.2, .7, .2, 1), opacity 0s linear .35s;
+}
+a:hover > .btn-arrow .btn-arrow__stem,
+a:focus-visible > .btn-arrow .btn-arrow__stem {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition: stroke-dashoffset .35s cubic-bezier(.2, .7, .2, 1), opacity 0s;
+}
 
 /* ------------------------------------------------------------------ Hero */
 
@@ -406,7 +460,6 @@ a { color: inherit; text-decoration: none; }
     inset -10px 2px 14px rgba(229, 90, 127, .28),
     inset -2px -1px 5px rgba(240, 106, 143, .75);
 }
-.cta--primary img { width: 16px; height: 16px; }
 .cta--secondary {
   padding: 0 24.5px;
   border: 1.5px solid var(--line);
@@ -892,6 +945,10 @@ a { color: inherit; text-decoration: none; }
 .reveal [data-reveal]:not(.is-visible) { opacity: 0; translate: 0 32px; }
 
 /* ------------------------------------------------------------------ Narrow screens */
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-fx { animation: none; }
+}
 
 @media (max-width: 900px) {
   .header { padding: 16px 16px 0; }
