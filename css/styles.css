@@ -951,18 +951,16 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 
 /* ------------------------------------------------------------------ Reveal */
 /* Hidden starting states exist only while html.reveal is set (JS on, motion allowed).
-   The hero appears all at once when the loader leaves (html.is-ready); [data-reveal]
-   blocks appear as they scroll into view (.is-visible, set by main.js). Elements start
-   from a faint 25% rather than invisible, so they settle in instead of popping up. Only opacity,
+   Text (headings, copy) is there from the start; only the interface animates. The hero
+   UI appears all at once when the loader leaves (html.is-ready); [data-reveal] blocks
+   appear as they scroll into view (.is-visible, set by main.js). Elements start from a
+   faint 25% rather than invisible, so they settle in instead of popping up. Only opacity,
    translate, scale and filter animate, so the scroll-driven transforms stay intact. */
 
 .logo__in { display: flex; align-items: center; justify-content: center; max-width: 100%; }
 
 .reveal .header,
 .reveal .hero__rays,
-.reveal .hero__line1,
-.reveal .hero__line2,
-.reveal .hero__sub,
 .reveal .hero__ctas,
 .reveal .product,
 .reveal .product__screen,
@@ -982,9 +980,6 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 
 .reveal:not(.is-ready) .header { opacity: .25; translate: 0 -12px; }
 .reveal:not(.is-ready) .hero__rays { opacity: .2; scale: 1.04; }
-.reveal:not(.is-ready) .hero__line1,
-.reveal:not(.is-ready) .hero__line2 { opacity: .25; translate: 0 20px; filter: blur(8px); }
-.reveal:not(.is-ready) .hero__sub,
 .reveal:not(.is-ready) .hero__ctas { opacity: .25; translate: 0 20px; filter: blur(4px); }
 .reveal:not(.is-ready) .product,
 .reveal:not(.is-ready) .product__screen { opacity: .25; translate: 0 40px; }
