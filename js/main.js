@@ -62,6 +62,7 @@
     root.style.setProperty('--p', p.toFixed(4));
     root.style.setProperty('--q', q.toFixed(4));
     moveFloating(p);
+    hero.classList.toggle('is-open', p > .97);   // dashboard fully open: show the bookkeeping column
     hero.classList.toggle('is-tabs', p > .999);
   }
   function requestRender() {
