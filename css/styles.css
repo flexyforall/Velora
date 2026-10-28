@@ -611,7 +611,10 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .assistant__cta img { width: 12px; height: 12px; }
 
 /* Glass tags (home-1) → tab row (home-2). Each tag is anchored at its icon's top-left;
-   --ax/--ay are the home-1 coordinates, --bx/--by the home-2 ones (set by main.js). */
+   --ax/--ay are the home-1 coordinates, --bx/--by the home-2 ones (inline in index.html).
+   Instead of travelling across the dashboard, the floating tags dissolve early in the
+   scroll (--out) and the tab row materialises in place near the end, one tab after
+   another (--in). --st flips from the floating to the row layout while both are invisible. */
 .tags { position: absolute; inset: 0; pointer-events: none; }
 
 .tag {
@@ -630,10 +633,25 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   text-align: left;
   cursor: pointer;
   pointer-events: auto;
+  --st: clamp(0, (var(--p) - .5) * 1000, 1);
+  --out: clamp(0, var(--p) / .35, 1);
+  --in: clamp(0, (var(--p) - .62 - var(--i, 0) * .05) / .16, 1);
+  /* --row: how wide the tab row is right now (the block is still growing to 1077px) */
+  --row: calc((556 + 437 * var(--p)) / 993);
+  --fx: calc(var(--ax) + (var(--bx) - var(--ax)) * .12 * var(--out));
+  --fy: calc(var(--ay) + (var(--by) - var(--ay)) * .12 * var(--out));
+  --rx: calc(720.5 + (var(--bx) - 720.5) * var(--row));
+  --ry: calc(var(--by) + 417.5 * (1 - var(--p)) + 14 * (1 - var(--in)));
+  opacity: calc((1 - var(--out)) * (1 - var(--st)) + var(--in) * var(--st));
+  filter: blur(calc((var(--out) * (1 - var(--st)) + (1 - var(--in)) * var(--st)) * 6px));
   transform: translate(
-    calc((var(--ax) + (var(--bx) - var(--ax)) * var(--p)) * 1px),
-    calc((var(--ay) + (var(--by) - var(--ay)) * var(--p) - 63.5 * var(--q)) * 1px));
+    calc((var(--fx) * (1 - var(--st)) + var(--rx) * var(--st)) * 1px),
+    calc((var(--fy) * (1 - var(--st)) + var(--ry) * var(--st) - 63.5 * var(--q)) * 1px));
 }
+.tag:nth-child(2) { --i: 1; }
+.tag:nth-child(3) { --i: 2; }
+.tag:nth-child(4) { --i: 3; }
+.tag:nth-child(5) { --i: 4; }
 .tag:focus-visible { outline: 2px solid var(--rose); outline-offset: 4px; border-radius: 999px; }
 
 .tag__pill {
@@ -648,7 +666,7 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   box-shadow: 0 0 20px rgba(229, 90, 127, .07);
   -webkit-backdrop-filter: blur(9px);
           backdrop-filter: blur(9px);
-  opacity: max(0, 1 - 1.6 * var(--p));
+  opacity: calc(1 - var(--st));
 }
 .tag--bright .tag__pill { background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, .6)); }
 
@@ -659,7 +677,8 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   width: calc(var(--bw) * 1px);
   height: 1px;
   background: rgba(0, 0, 0, .1);
-  opacity: var(--p);
+  transform-origin: 0 0;
+  transform: scaleX(calc(var(--in) * var(--row)));
 }
 .tag__bar {
   position: absolute;
@@ -679,8 +698,8 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   padding: 6px;
   border: 1px solid rgba(255, 255, 255, .2);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--c), #000 calc(var(--p) * 100%));
-  opacity: calc(1 - .5 * var(--p));
+  background: color-mix(in srgb, var(--c), #000 calc(var(--st) * 100%));
+  opacity: calc(1 - .5 * var(--st));
 }
 .tag__glyph { position: absolute; left: 6px; top: 6px; width: 18px; height: 18px; }
 .tag__glyph--fundraising { left: 7.412px; top: 7.412px; width: 15.177px; height: 15.177px; }
@@ -692,7 +711,7 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   font-size: 16px;
   line-height: 22px;
   white-space: nowrap;
-  opacity: calc(1 - .3 * var(--p));
+  opacity: calc(1 - .3 * var(--st));
 }
 
 .tag.is-active .tag__icon { background: var(--c); opacity: 1; }
@@ -910,7 +929,6 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .reveal .hero__ctas,
 .reveal .product,
 .reveal .product__screen,
-.reveal .tag,
 .reveal [data-reveal] {
   transition:
     opacity 1s var(--reveal-ease) var(--d, 0ms),
@@ -940,7 +958,9 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .reveal:not(.is-ready) .hero__ctas { opacity: 0; translate: 0 28px; }
 .reveal:not(.is-ready) .product,
 .reveal:not(.is-ready) .product__screen { opacity: 0; translate: 0 56px; }
-.reveal:not(.is-ready) .tag { opacity: 0; translate: 0 20px; }
+.reveal:not(.is-ready) .tag { opacity: 0; }
+.reveal.is-ready .tag { animation: tag-in 1s var(--reveal-ease) var(--d, 0ms) backwards; }
+@keyframes tag-in { from { opacity: 0; translate: 0 20px; } }
 
 .reveal [data-reveal]:not(.is-visible) { opacity: 0; translate: 0 32px; }
 
