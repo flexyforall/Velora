@@ -3,847 +3,211 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wedge — Effortless Healthcare Operations</title>
-  <meta name="description" content="Wedge runs enrollment, referrals and patient access end to end, taking operational work off your team's plate.">
+  <title>Velora — Intelligent tools built for your mission</title>
+  <meta name="description" content="Automate workflows, strengthen donor stewardship, and simplify fund accounting with tools built for how nonprofits actually work.">
   <script>
-    // Loader (see js/main.js): only with JS, motion allowed, and when the page opens at the top.
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !location.hash) {
+    // Loader runs only with JS and when motion is allowed (see js/main.js).
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.classList.add('is-loading');
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     }
   </script>
-  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/mozilla-headline-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/dm-mono-500-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css?v=20261019-8">
+  <link rel="preload" href="assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <!-- Shared parts of the green AI icon used in buttons (animated on hover in css/styles.css) -->
-  <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="ai-glyph" viewBox="0 0 20 20">
-        <path d="M13.6833 6.625C15.7167 8.65833 15.7167 11.9583 13.6833 13.9917C11.65 16.025 8.35 16.025 6.31667 13.9917C4.28333 11.9583 4.28333 8.65833 6.31667 6.625C8.35 4.59167 11.65 4.59167 13.6833 6.625Z" fill="#fff"/>
-        <path d="M6.875 18.6583C6.8 18.6583 6.71667 18.6417 6.64167 18.6167C4.76667 17.8667 3.25 16.5417 2.23333 14.7917C1.25 13.0833 0.858333 11.15 1.11667 9.18333C1.15833 8.84167 1.48333 8.6 1.81667 8.64167C2.15833 8.68333 2.4 9 2.35833 9.34167C2.14167 11.0333 2.475 12.7 3.31667 14.1667C4.18333 15.6667 5.49167 16.8083 7.1 17.45C7.41667 17.5833 7.575 17.9417 7.45 18.2667C7.35833 18.5083 7.11667 18.6583 6.875 18.6583Z" fill="#fff"/>
-        <path d="M4.875 4.35833C4.69167 4.35833 4.50833 4.275 4.38333 4.11667C4.16667 3.85 4.21667 3.45833 4.49167 3.24167C6.075 2 7.98333 1.34167 10 1.34167C11.9667 1.34167 13.8417 1.975 15.4167 3.175C15.6917 3.38333 15.7417 3.775 15.5333 4.05C15.325 4.325 14.9333 4.375 14.6583 4.16667C13.3 3.13333 11.6917 2.59167 10 2.59167C8.26667 2.59167 6.625 3.15833 5.25833 4.225C5.14167 4.31667 5.00833 4.35833 4.875 4.35833Z" fill="#fff"/>
-        <path d="M13.125 18.6583C12.875 18.6583 12.6417 18.5083 12.5417 18.2667C12.4167 17.95 12.5667 17.5833 12.8917 17.45C14.5 16.8 15.8083 15.6667 16.675 14.1667C17.525 12.7 17.8583 11.0333 17.6333 9.35C17.5917 9.00833 17.8333 8.69167 18.175 8.65C18.5083 8.60833 18.8333 8.85 18.875 9.19167C19.125 11.15 18.7417 13.0917 17.7583 14.8C16.75 16.55 15.225 17.8667 13.35 18.625C13.2833 18.6417 13.2083 18.6583 13.125 18.6583Z" fill="#fff"/>
-      </symbol>
-      <filter id="ai-icon-inset" x="0" y="0" width="44" height="48" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dy="4"/>
-        <feGaussianBlur stdDeviation="2"/>
-        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"/>
-        <feBlend mode="normal" in2="shape" result="effect1_innerShadow"/>
-      </filter>
-      <!-- Region covers the glow at rest (bottom right) and on hover (top edge). -->
-      <filter id="ai-icon-blur" x="-40" y="-60" width="210" height="150" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feGaussianBlur stdDeviation="10"/>
-      </filter>
-      <clipPath id="ai-icon-clip-44"><rect width="44" height="44" rx="4"/></clipPath>
-      <clipPath id="ai-icon-clip-36"><rect width="36" height="36" rx="4"/></clipPath>
-    </defs>
-  </svg>
-
-  <!-- Loader: the first video frame grows with the load progress, then expands into the hero -->
-  <div class="loader" aria-hidden="true">
-    <span class="loader__line"></span>
-    <div class="loader__image"><img src="assets/hero/hero-poster.jpg?v=20261019-8" alt=""></div>
-    <div class="loader__frame">
-      <span class="loader__corner loader__corner--tl"><img src="assets/loader/corner.svg?v=20261019-8" alt=""></span>
-      <span class="loader__corner loader__corner--tr"><img src="assets/loader/corner.svg?v=20261019-8" alt=""></span>
-      <span class="loader__corner loader__corner--bl"><img src="assets/loader/corner.svg?v=20261019-8" alt=""></span>
-      <span class="loader__corner loader__corner--br"><img src="assets/loader/corner.svg?v=20261019-8" alt=""></span>
-    </div>
-    <div class="loader__progress">
-      <span class="loader__value">0%</span>
-      <span class="loader__bar"><span class="loader__fill"></span></span>
+  <!-- Loader (Figma: loader 534:9851 → 534:10069) -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__stage">
+      <div class="loader__ring" id="loader-ring"></div>
+      <div class="loader__mark" id="loader-mark">
+        <img src="assets/images/loader-mark.svg" width="133" height="60" alt="">
+      </div>
+      <p class="loader__text loader__text--left"><span class="loader__word" data-at="0.2">Intelligent</span> <span class="loader__word" data-at="0.5">tools</span></p>
+      <p class="loader__text loader__text--right"><span class="loader__word" data-at="0.75">built for your mission</span></p>
+      <p class="loader__pct" id="loader-pct">0%</p>
     </div>
   </div>
 
-  <!-- Compact header (Figma «menu», type Small): shown while scrolling up, hidden while scrolling
-       down. Over the dark banners marked data-header="light" it switches to the white logo and links. -->
-  <div class="site-header">
-    <nav class="site-header__menu" aria-label="Main">
-      <a class="site-header__logo" href="#">
-        <img class="site-header__logo-dark" src="assets/common/logo-full-dark.svg?v=20261019-8" width="146" height="38" alt="Wedge">
-        <img class="site-header__logo-light" src="assets/common/logo-full.svg?v=20261019-8" width="146" height="38" alt="">
-      </a>
-      <div class="site-header__right">
-        <div class="menu__links">
-          <a class="menu__link t-body-m" href="#agents"><span class="btn-label">Agents</span></a>
-          <a class="menu__link t-body-m" href="#contact"><span class="btn-label">Contact Us</span></a>
-        </div>
-        <a class="btn btn--white btn--menu" href="#contact">
-          <span class="t-body-m-medium btn-label">Book a Demo</span>
-          <img src="assets/common/arrow-right-dark.svg?v=20261019-8" width="12" height="12" alt="">
+  <!-- Header (Figma: Header 453:5121) -->
+  <header class="header" id="header">
+    <img class="header__bg" src="assets/images/header-fade.png" alt="">
+    <nav class="nav" aria-label="Main">
+      <div class="nav__left">
+        <a class="nav__logo" href="#" aria-label="Velora home">
+          <img src="assets/images/velora-logo.png" width="134" height="21" alt="Velora">
         </a>
+        <div class="nav__links">
+          <a class="nav__link" href="#">Platform <img src="assets/icons/chevron-down.svg" width="14" height="14" alt=""></a>
+          <a class="nav__link" href="#">Solutions <img src="assets/icons/chevron-down.svg" width="14" height="14" alt=""></a>
+          <a class="nav__link" href="#">Resources <img src="assets/icons/chevron-down.svg" width="14" height="14" alt=""></a>
+          <a class="nav__link nav__link--plain" href="#">Partners</a>
+        </div>
+      </div>
+      <div class="nav__actions">
+        <a class="btn-login" href="#">Log in</a>
+        <a class="btn-primary" href="#">Book a demo <img src="assets/icons/arrow-right-14.svg" width="14" height="14" alt=""></a>
       </div>
     </nav>
-  </div>
-
-  <!-- Hero: pinned while scrolling scrubs the video from the building into the Agents screen -->
-  <div class="intro">
-  <header class="hero">
-    <div class="hero__media" aria-hidden="true">
-      <picture>
-        <source media="(prefers-reduced-motion: reduce)" srcset="assets/hero/hero-bg.png?v=20261019-8">
-        <img class="hero__poster" src="assets/hero/hero-poster.jpg?v=20261019-8" alt="">
-      </picture>
-      <video class="hero__video" muted playsinline preload="auto" data-src="assets/hero/hero-scrub.mp4?v=20261019-8"></video>
-    </div>
-    <div class="hero__shade"></div>
-
-    <!-- Shown over the office part of the video (Figma «second», 1057:21749) -->
-    <div class="hero__chapter">
-      <div class="hero__chapter-shade" aria-hidden="true"></div>
-      <div class="hero__chapter-content">
-        <h2 class="hero__chapter-title t-h1">One outcome. Many agents.</h2>
-        <p class="hero__chapter-text t-body-l">Wedge coordinates the work between first contact and a completed workflow.</p>
-      </div>
-    </div>
-    <div class="hero__ticks" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-
-    <div class="hero__inner">
-      <nav class="menu">
-        <a class="menu__logo" href="#"><img src="assets/common/logo-full.svg?v=20261019-8" width="146" height="38" alt="Wedge"></a>
-        <div class="menu__right">
-          <div class="menu__links">
-            <a class="menu__link t-body-m" href="#agents"><span class="btn-label">Agents</span></a>
-            <a class="menu__link t-body-m" href="#contact"><span class="btn-label">Contact Us</span></a>
-          </div>
-          <a class="btn btn--white btn--menu" href="#contact">
-            <span class="t-body-m-medium btn-label">Book a Demo</span>
-            <img src="assets/common/arrow-right-dark.svg?v=20261019-8" width="12" height="12" alt="">
-          </a>
-        </div>
-      </nav>
-
-      <h1 class="hero__title t-display">Effortless Healthcare Operations</h1>
-
-      <div class="hero__content">
-        <p class="hero__lead t-body-l">Wedge runs enrollment, referrals and patient access end to end, taking operational work off your team's plate.</p>
-        <div class="hero__buttons">
-          <a class="btn btn--white btn--icon" href="#contact">
-            <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="44" height="44" viewBox="0 0 44 44"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-44)"><rect width="44" height="44" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-            <span class="btn__text">
-              <span class="t-body-m-medium btn-label">Book a Demo</span>
-              <img src="assets/common/arrow-right-dark.svg?v=20261019-8" width="12" height="12" alt="">
-            </span>
-          </a>
-          <a class="btn btn--glass t-body-m" href="#agents"><span class="btn-label">Explore the Platforms</span></a>
-        </div>
-      </div>
-
-      <ul class="hero__stats">
-        <li class="stat stat--1">
-          <span class="stat__marker"></span>
-          <span class="stat__body">
-            <span class="stat__value t-h5">100+</span>
-            <span class="stat__label t-body-m">Clinical locations</span>
-          </span>
-        </li>
-        <li class="hero__divider" aria-hidden="true"></li>
-        <li class="stat stat--2">
-          <span class="stat__marker"></span>
-          <span class="stat__body">
-            <span class="stat__value t-h5">2M+</span>
-            <span class="stat__label t-body-m">Patients</span>
-          </span>
-        </li>
-        <li class="hero__divider" aria-hidden="true"></li>
-        <li class="stat stat--3">
-          <span class="stat__marker"></span>
-          <span class="stat__body">
-            <span class="stat__value t-h5">100%</span>
-            <span class="stat__label t-body-m">Satisfaction rate</span>
-          </span>
-        </li>
-      </ul>
-    </div>
   </header>
-  </div>
 
   <main>
-    <!-- Agents: the side tabs switch between the five agent slides -->
-    <section class="agents" id="agents">
-      <div class="agents__inner">
-        <img class="agents__dots" src="assets/agents/dots.png?v=20261019-8" alt="">
-        <span class="agents__rail" aria-hidden="true"></span>
+    <!-- Hero: scroll animation home-1 (453:5086) → home-2 (453:6407) → home-3 (453:6836) -->
+    <section class="hero" id="hero">
+      <div class="hero__sticky">
+        <div class="hero__canvas" id="hero-canvas">
+          <div class="hero__rays" id="hero-rays"><img src="assets/images/hero-rays.png" alt=""></div>
+          <div class="hero__fade" id="hero-fade"></div>
+          <img class="hero__glow" id="hero-glow" src="assets/images/hero-glow.svg" width="328" height="138" alt="">
 
-        <div class="agents__tabs" role="tablist" aria-label="Wedge agents" aria-orientation="vertical">
-          <button class="vtab is-active" type="button" role="tab" id="agent-tab-gaia" aria-controls="agent-gaia" aria-selected="true"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">01</span><span class="t-body-s">Gaia platform</span></button>
-          <button class="vtab" type="button" role="tab" id="agent-tab-referral" aria-controls="agent-referral" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">02</span><span class="t-body-s">Autonomous Referral Management</span></button>
-          <button class="vtab" type="button" role="tab" id="agent-tab-front-office" aria-controls="agent-front-office" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">03</span><span class="t-body-s">Autonomous Front Office</span></button>
-          <button class="vtab" type="button" role="tab" id="agent-tab-care-gap" aria-controls="agent-care-gap" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">04</span><span class="t-body-s">Care Gap Closure</span></button>
-          <button class="vtab" type="button" role="tab" id="agent-tab-rcm" aria-controls="agent-rcm" aria-selected="false" tabindex="-1"><span class="vtab__bullet"></span><span class="vtab__num t-tag-s">05</span><span class="t-body-s">Revenue Cycle Management</span></button>
-        </div>
-      </div>
+          <div class="product" id="product"></div>
 
-      <div class="agents__panel">
-        <div class="agents__panel-inner">
-
-          <!-- 01 Gaia platform -->
-          <div class="agent-slide is-active" id="agent-gaia" role="tabpanel" aria-labelledby="agent-tab-gaia">
-            <div class="agents__illustration" aria-hidden="true">
-              <img src="assets/agents/gaia-platform-1.png?v=20261019-8" alt="">
-            </div>
-            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
-
-            <div class="agents__top">
-              <div class="agents__title">
-                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Medicaid and Medi-Cal</span>
-                <h2 class="t-h3">Keep eligible<br>patients covered.</h2>
-              </div>
-              <div class="agents__body">
-                <p class="t-body-m">Gaia runs outreach, application completion and follow-up through enrollment and renewal.</p>
-                <a class="btn btn--dark btn--icon" href="#contact">
-                  <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="36" height="36" viewBox="0 0 36 36"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-36)"><rect width="36" height="36" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-                  <span class="btn__text">
-                    <span class="t-body-m-medium btn-label">Explore Gaia</span>
-                    <img src="assets/agents/arrow-right-light.svg?v=20261019-8" width="12" height="12" alt="">
-                  </span>
-                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg?v=20261019-8" alt=""></span>
-                </a>
-              </div>
-            </div>
-
-            <div class="flow-card">
-              <div class="flow-card__steps">
-                <div class="flow-step">
-                  <img src="assets/agents/check.svg?v=20261019-8" width="16" height="16" alt="">
-                  <span class="flow-step__label">Eligible Patients</span>
-                  <span class="flow-step__status">Renewal due in 30 days</span>
-                </div>
-                <img class="flow-card__connector" src="assets/agents/connector.svg?v=20261019-8" width="30" height="6" alt="">
-                <div class="flow-step">
-                  <img src="assets/agents/check.svg?v=20261019-8" width="16" height="16" alt="">
-                  <span class="flow-step__label">Reached</span>
-                  <span class="flow-step__status">Outreach via SMS</span>
-                </div>
-                <img class="flow-card__connector" src="assets/agents/connector.svg?v=20261019-8" width="30" height="6" alt="">
-                <div class="flow-step">
-                  <img src="assets/agents/check.svg?v=20261019-8" width="16" height="16" alt="">
-                  <span class="flow-step__label">Application Started</span>
-                  <span class="flow-step__status">Initialized</span>
-                </div>
-                <img class="flow-card__connector" src="assets/agents/connector.svg?v=20261019-8" width="30" height="6" alt="">
-                <div class="flow-step">
-                  <img src="assets/agents/check.svg?v=20261019-8" width="16" height="16" alt="">
-                  <span class="flow-step__label">Application Completed</span>
-                  <span class="flow-step__status">Submitted</span>
-                </div>
-                <img class="flow-card__connector" src="assets/agents/connector.svg?v=20261019-8" width="30" height="6" alt="">
-                <div class="flow-step">
-                  <span class="flow-step__loading"><img src="assets/agents/loading.svg?v=20261019-8" alt=""></span>
-                  <span class="flow-step__label">Coverage Retained</span>
-                  <span class="flow-step__status flow-step__status--done">Renewed</span>
-                </div>
-              </div>
-              <img class="card-line" src="assets/agents/line73.svg?v=20261019-8" width="364" height="1" alt="">
-              <div class="metrics">
-                <div class="metric metric--fixed" style="--w: 109.333px">
-                  <span class="metric__value">400%</span>
-                  <span class="metric__label">Enrollment Capacity<br>Increased</span>
-                </div>
-                <div class="metric">
-                  <span class="metric__value">+60%</span>
-                  <span class="metric__label">Month-to-Month <br>Enrollment Growth</span>
-                </div>
-                <div class="metric">
-                  <span class="metric__value">&gt;70%</span>
-                  <span class="metric__label">Staff Workload Reduced</span>
-                </div>
-              </div>
-            </div>
+          <!-- Glass tags: float around the product in home-1, line up as tabs in home-2 -->
+          <div class="tags" id="tags" role="tablist" aria-label="Velora products">
+            <button class="tag tag--bright is-active" type="button" role="tab" aria-selected="true" style="--c:#e55a7f; --ax:205; --ay:570; --aw:152; --bx:230; --by:704.5; --bw:150">
+              <span class="tag__pill"></span>
+              <span class="tag__line"><span class="tag__bar"></span></span>
+              <span class="tag__icon"><img class="tag__glyph tag__glyph--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span>
+              <span class="tag__label">Fundraising</span>
+            </button>
+            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#18597e; --ax:70; --ay:653; --aw:191; --bx:390.5; --by:704.5; --bw:189">
+              <span class="tag__pill"></span>
+              <span class="tag__line"><span class="tag__bar"></span></span>
+              <span class="tag__icon"><img class="tag__glyph" src="assets/icons/tag-fund-accounting.svg" alt=""></span>
+              <span class="tag__label">Fund Accounting</span>
+            </button>
+            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#e55a7f; --ax:1084; --ay:600; --aw:212; --bx:590; --by:704.5; --bw:210">
+              <span class="tag__pill"></span>
+              <span class="tag__line"><span class="tag__bar"></span></span>
+              <span class="tag__icon"><img class="tag__glyph tag__glyph--donor" src="assets/icons/tag-donor-management.svg" alt=""></span>
+              <span class="tag__label">Donor Management</span>
+            </button>
+            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#2f744f; --ax:1147; --ay:690; --aw:209; --bx:810.5; --by:704.5; --bw:207">
+              <span class="tag__pill"></span>
+              <span class="tag__line"><span class="tag__bar"></span></span>
+              <span class="tag__icon"><img class="tag__glyph tag__glyph--grant" src="assets/icons/tag-grant-management.svg" alt=""></span>
+              <span class="tag__label">Grant Management</span>
+            </button>
+            <button class="tag" type="button" role="tab" aria-selected="false" style="--c:#814dc8; --ax:230; --ay:734; --aw:197; --bx:1028; --by:704.5; --bw:195">
+              <span class="tag__pill"></span>
+              <span class="tag__line"><span class="tag__bar"></span></span>
+              <span class="tag__icon"><img class="tag__glyph" src="assets/icons/tag-mission-assistant.svg" alt=""></span>
+              <span class="tag__label">Mission Assistant</span>
+            </button>
           </div>
 
-          <!-- 02 Autonomous Referral Management -->
-          <div class="agent-slide" id="agent-referral" role="tabpanel" aria-labelledby="agent-tab-referral">
-            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
-              <img src="assets/agents/referral/illustration.png?v=20261019-8" alt="">
+          <!-- Dashboard sits above the tags, so they slide under it while lining up -->
+          <div class="product__screen" id="product-screen">
+            <div class="card card--revenue">
+              <div class="card__head">
+                <p class="card__title">Total Revenue Q4</p>
+                <p class="card__period">Oct – Dec</p>
+              </div>
+              <p class="card__amount">$342,850</p>
+              <div class="card__chart">
+                <img src="assets/images/revenue-curve.svg" width="333" height="273.5" alt="Revenue growing from October to December">
+              </div>
+              <div class="card__months"><span>Oct</span><span>Nov</span><span>Dec</span></div>
             </div>
-            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
-
-            <div class="agents__top agents__top--end agents__top--offset">
-              <div class="agents__title">
-                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Referral Management Platform</span>
-                <h2 class="t-h3 agents__heading--two-lines">Close the referral loop.</h2>
+            <div class="card card--books">
+              <div class="card__head card__head--books">
+                <p class="card__title">Automated bookkeeping</p>
               </div>
-              <div class="agents__body">
-                <p class="t-body-m">Wedge moves referrals from order to completed appointment and returned documentation.</p>
-                <a class="btn btn--dark btn--icon" href="#contact">
-                  <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="36" height="36" viewBox="0 0 36 36"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-36)"><rect width="36" height="36" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-                  <span class="btn__text">
-                    <span class="t-body-m-medium btn-label">Explore Referrals</span>
-                    <img src="assets/agents/arrow-right-light.svg?v=20261019-8" width="12" height="12" alt="">
-                  </span>
-                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg?v=20261019-8" alt=""></span>
-                </a>
+              <div class="books__row">
+                <div class="books__info"><p class="books__name">Bank Feed</p><p class="books__meta">$25,000 Deposit</p></div>
+                <p class="books__status"><img src="assets/icons/check.svg" width="16" height="16" alt="">Reconciled</p>
               </div>
-            </div>
-
-            <div class="agent-card">
-              <div class="agent-card__group">
-                <div class="referral-head">
-                  <img src="assets/agents/referral/story.svg?v=20261019-8" width="20" height="20" alt="">
-                  <span>Referral Performance Tracking</span>
-                </div>
-                <div class="steps">
-                  <div class="step"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Referral Created</span></div>
-                  <img src="assets/agents/referral/connector.svg?v=20261019-8" width="24" height="6" alt="">
-                  <div class="step"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Authorization (when required)</span></div>
-                  <img src="assets/agents/referral/connector.svg?v=20261019-8" width="24" height="6" alt="">
-                  <div class="step"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Scheduled</span></div>
-                  <img src="assets/agents/referral/connector.svg?v=20261019-8" width="24" height="6" alt="">
-                  <div class="step step--pending"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Patient Seen</span></div>
-                  <img src="assets/agents/referral/connector.svg?v=20261019-8" width="24" height="6" alt="">
-                  <div class="step step--pending"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Documentation Returned</span></div>
-                </div>
+              <div class="books__row">
+                <div class="books__info"><p class="books__name">AI Bill Entry</p><p class="books__meta">Invoice #2041</p></div>
+                <p class="books__status"><img src="assets/icons/check.svg" width="16" height="16" alt="">Processed</p>
               </div>
-              <img class="card-line" src="assets/agents/line-348.svg?v=20261019-8" width="348" height="1" alt="">
-              <div class="metrics metrics--tight">
-                <div class="metric metric--fixed" style="--w: 116px">
-                  <span class="metric__value">250%</span>
-                  <span class="metric__label">Closed-Loop Referral<br>Capacity Increased</span>
-                </div>
-                <div class="metric metric--fixed" style="--w: 116px">
-                  <span class="metric__value">&gt;90%</span>
-                  <span class="metric__label">Closed-Loop<br>Conversion Rate</span>
-                </div>
-                <div class="metric metric--fixed" style="--w: 116px">
-                  <span class="metric__value">&gt;80%</span>
-                  <span class="metric__label">Staff Workload Reduced</span>
+              <div class="books__row">
+                <div class="books__info"><p class="books__name">Card Payout</p><p class="books__meta">$8,420 from online gifts</p></div>
+                <p class="books__status"><img src="assets/icons/check.svg" width="16" height="16" alt="">Matched</p>
+              </div>
+              <div class="books__row books__row--last">
+                <div class="books__info"><p class="books__name">Restricted Gift</p><p class="books__meta">$5,000 to Clean Water</p></div>
+                <p class="books__status"><img src="assets/icons/check.svg" width="16" height="16" alt="">Allocated</p>
+              </div>
+              <div class="assistant-wrap">
+                <div class="assistant">
+                  <span class="assistant__spark"><img src="assets/icons/spark.svg" width="14" height="14" alt=""></span>
+                  <p class="assistant__text">Clean Water Campaign fund has reached 100% of its quarterly goal. Draft a funding report for the board?</p>
+                  <a class="assistant__cta" href="#" aria-label="Draft the funding report"><img src="assets/icons/arrow-right-12.svg" width="12" height="12" alt=""></a>
                 </div>
               </div>
             </div>
+            <span class="product__divider" id="product-divider"><img src="assets/icons/divider.svg" width="435" height="1" alt=""></span>
           </div>
 
-          <!-- 03 Autonomous Front Office -->
-          <div class="agent-slide" id="agent-front-office" role="tabpanel" aria-labelledby="agent-tab-front-office">
-            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
-              <img src="assets/agents/front-office/illustration.png?v=20261019-8" alt="">
+          <div class="hero__copy" id="hero-copy">
+            <div class="hero__text">
+              <h1 class="hero__title">
+                <span class="hero__line1">Do more good</span>
+                <span class="hero__line2">with what you have.</span>
+              </h1>
+              <p class="hero__sub">Automate workflows, strengthen donor stewardship, and simplify fund accounting with tools built for how nonprofits actually work.</p>
             </div>
-            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
-
-            <div class="agents__top agents__top--end">
-              <div class="agents__title agents__title--wide">
-                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Autonomous Front Office</span>
-                <h2 class="t-h3">Patient access without<br>the administrative bottleneck</h2>
-              </div>
-              <div class="agents__body">
-                <p class="t-body-m">Wedge coordinates calls, scheduling, registration and follow-up across the front office.</p>
-                <a class="btn btn--dark btn--icon" href="#contact">
-                  <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="36" height="36" viewBox="0 0 36 36"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-36)"><rect width="36" height="36" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-                  <span class="btn__text">
-                    <span class="t-body-m-medium btn-label">Explore Front Office</span>
-                    <img src="assets/agents/arrow-right-light.svg?v=20261019-8" width="12" height="12" alt="">
-                  </span>
-                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg?v=20261019-8" alt=""></span>
-                </a>
-              </div>
+            <div class="hero__ctas">
+              <a class="cta cta--primary" href="#">Book a demo <img src="assets/icons/arrow-right-16.svg" width="16" height="16" alt=""></a>
+              <a class="cta cta--secondary" href="#">Explore the suite</a>
             </div>
-
-            <div class="agent-card">
-              <div class="call">
-                <div class="call__row">
-                  <span class="call__icon"><img src="assets/agents/front-office/call.svg?v=20261019-8" width="26" height="26" alt=""></span>
-                  <span class="call__text">I’d like to book an urgent post-op follow-up</span>
-                </div>
-                <img class="card-line" src="assets/agents/line-348.svg?v=20261019-8" width="348" height="1" alt="">
-              </div>
-              <div class="steps steps--flush">
-                <div class="step"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Insurance Verified</span></div>
-                <img src="assets/agents/front-office/connector.svg?v=20261019-8" width="24" height="7" alt="">
-                <div class="step step--branch">
-                  <img src="assets/agents/front-office/dot-frame.svg?v=20261019-8" width="10" height="20" alt="">
-                  <div class="step__detail">
-                    <span>Appointment Scheduled</span>
-                    <div class="step__tags">
-                      <span class="chip"><img src="assets/agents/front-office/alert.svg?v=20261019-8" width="12" height="12" alt="">Complex Scheduling Exception</span>
-                      <span class="chip"><img src="assets/agents/front-office/people.svg?v=20261019-8" width="12" height="12" alt="">Escalated to Staff</span>
-                    </div>
-                  </div>
-                </div>
-                <img src="assets/agents/front-office/connector.svg?v=20261019-8" width="24" height="7" alt="">
-                <div class="step"><img src="assets/agents/dot.svg?v=20261019-8" width="10" height="10" alt=""><span>Forms Completed</span></div>
-              </div>
-              <img class="card-line" src="assets/agents/line-348.svg?v=20261019-8" width="348" height="1" alt="">
-              <div class="metrics metrics--tight">
-                <div class="metric metric--fixed" style="--w: 116px">
-                  <span class="metric__value">&gt;98%</span>
-                  <span class="metric__label">Patient Satisfaction<br>Score (CSAT)</span>
-                </div>
-                <div class="metric metric--fixed" style="--w: 116px">
-                  <span class="metric__value">&gt;85%</span>
-                  <span class="metric__label">Charity Care Write-offs Reduced</span>
-                </div>
-                <div class="metric metric--fixed" style="--w: 116px">
-                  <span class="metric__value">&gt;60%</span>
-                  <span class="metric__label">Clinical Care<br>Gaps Addressed</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 04 Care Gap Closure -->
-          <div class="agent-slide" id="agent-care-gap" role="tabpanel" aria-labelledby="agent-tab-care-gap">
-            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
-              <img src="assets/agents/care-gap/illustration.png?v=20261019-8" alt="">
-            </div>
-            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
-
-            <div class="agents__top agents__top--center">
-              <div class="agents__title agents__title--wide">
-                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Care Gap Closure</span>
-                <h2 class="t-h3">Close preventive care<br>gaps at scale.</h2>
-              </div>
-              <div class="agents__body">
-                <p class="t-body-m">Wedge spots clinical gaps, personalizes patient outreach, and schedules preventive visits automatically.</p>
-                <a class="btn btn--dark btn--icon" href="#contact">
-                  <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="36" height="36" viewBox="0 0 36 36"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-36)"><rect width="36" height="36" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-                  <span class="btn__text">
-                    <span class="t-body-m-medium btn-label">Explore Care Gap</span>
-                    <img src="assets/agents/arrow-right-light.svg?v=20261019-8" width="12" height="12" alt="">
-                  </span>
-                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg?v=20261019-8" alt=""></span>
-                </a>
-              </div>
-            </div>
-
-            <div class="agent-card">
-              <div class="agent-card__group agent-card__group--gap-4">
-                <div class="record">
-                  <p class="record__title">Action Required</p>
-                  <p class="record__row record__row--first"><span class="record__key">Measure:</span><span>HEDIS COL (Colon Screening)</span></p>
-                  <p class="record__row record__row--last"><span class="record__key">Patient:</span><span>James L.</span></p>
-                </div>
-                <p class="notice"><img src="assets/agents/story-14.svg?v=20261019-8" width="14" height="14" alt=""><span>Text outreach initialized. Quality score optimized.</span></p>
-              </div>
-              <img class="card-line" src="assets/agents/line-348.svg?v=20261019-8" width="348" height="1" alt="">
-              <div class="metrics">
-                <div class="metric metric--fixed" style="--w: 105.333px">
-                  <span class="metric__value">&gt;60%</span>
-                  <span class="metric__label">Clinical Care Gaps Addressed</span>
-                </div>
-                <div class="metric metric--fixed" style="--w: 115.333px">
-                  <span class="metric__value">+25%</span>
-                  <span class="metric__label">Star Rating Performance Increase</span>
-                </div>
-                <div class="metric">
-                  <span class="metric__value">&gt;85%</span>
-                  <span class="metric__label">Patient Outreach Conversion</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 05 Revenue Cycle Management -->
-          <div class="agent-slide" id="agent-rcm" role="tabpanel" aria-labelledby="agent-tab-rcm">
-            <div class="agents__illustration agents__illustration--tall" aria-hidden="true">
-              <img src="assets/agents/rcm/illustration.png?v=20261019-8" alt="">
-            </div>
-            <div class="agents__shade agents__shade--top" aria-hidden="true"></div>
-            <div class="agents__shade agents__shade--bottom" aria-hidden="true"></div>
-
-            <div class="agents__top agents__top--center">
-              <div class="agents__title agents__title--wide">
-                <span class="tag tag--accent t-tag-s"><span class="tag__dot"></span>Revenue Cycle Management</span>
-                <h2 class="t-h3">Automate claims.<br>Eliminate denials.</h2>
-              </div>
-              <div class="agents__body">
-                <p class="t-body-m">Wedge tracks each invoice from start to finish, fixing coding errors automatically.</p>
-                <a class="btn btn--dark btn--icon" href="#contact">
-                  <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="36" height="36" viewBox="0 0 36 36"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-36)"><rect width="36" height="36" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-                  <span class="btn__text">
-                    <span class="t-body-m-medium btn-label">Explore Revenue Cycle</span>
-                    <img src="assets/agents/arrow-right-light.svg?v=20261019-8" width="12" height="12" alt="">
-                  </span>
-                  <span class="btn__glow" aria-hidden="true"><img src="assets/agents/ellipse2.svg?v=20261019-8" alt=""></span>
-                </a>
-              </div>
-            </div>
-
-            <div class="agent-card">
-              <div class="agent-card__group agent-card__group--gap-8">
-                <p class="denials__title"><span class="denials__icon"><img src="assets/agents/rcm/story-gray.svg?v=20261019-8" width="14" height="14" alt=""></span>Live Denial Capture</p>
-                <img class="card-line" src="assets/agents/line-348.svg?v=20261019-8" width="348" height="1" alt="">
-                <div class="denials">
-                  <div class="invoices">
-                    <p class="invoice"><span>#INV-9940</span><span>Aetna</span><span class="invoice__amount invoice__amount--ok">$4,200</span></p>
-                    <p class="invoice"><span>#INV-9940</span><span>United</span><span class="invoice__flag"><img src="assets/agents/rcm/alert.svg?v=20261019-8" width="16" height="16" alt=""><span class="invoice__amount invoice__amount--warn">$24,850</span></span></p>
-                  </div>
-                  <p class="notice"><img src="assets/agents/story-14.svg?v=20261019-8" width="14" height="14" alt=""><span>Appeal auto-generated.<br>Revenue leakage prevented.</span></p>
-                </div>
-              </div>
-              <img class="card-line card-line--350" src="assets/agents/rcm/line-350.svg?v=20261019-8" width="350" height="1" alt="">
-              <div class="metrics">
-                <div class="metric metric--fixed" style="--w: 109.333px">
-                  <span class="metric__value">-35%</span>
-                  <span class="metric__label">Claim Denial Rate</span>
-                </div>
-                <div class="metric">
-                  <span class="metric__value">99.2%</span>
-                  <span class="metric__label">Clean Claim Rate (First Pass)</span>
-                </div>
-                <div class="metric">
-                  <span class="metric__value">-12 Days</span>
-                  <span class="metric__label">Days Sales Outstanding (DSO)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Co-development banner -->
-    <section class="build">
-      <div class="build__inner">
-        <div class="build__banner" data-header="light">
-          <div class="build__bg" aria-hidden="true"><img src="assets/build/bg.png?v=20261019-8" alt=""></div>
-          <span class="build__vline build__vline--1" aria-hidden="true"></span>
-          <span class="build__vline build__vline--2" aria-hidden="true"></span>
-
-          <div class="build__content">
-            <div class="build__title">
-              <h2 class="t-h3">Co-development</h2>
-              <p class="build__lead t-body-l">Build workflows specific to your organization on Wedge infrastructure.</p>
-            </div>
-            <a class="link link--light" href="#contact">
-              <span class="t-body-m btn-label">Build with Wedge</span>
-              <img src="assets/build/arrow-right.svg?v=20261019-8" width="12" height="12" alt="">
-            </a>
-          </div>
-
-          <div class="build__art" aria-hidden="true">
-            <span class="build__logo"><img src="assets/build/logo.svg?v=20261019-8" width="80" height="80" alt=""></span>
-            <img class="build__line build__line--top" src="assets/build/line-top.svg?v=20261019-8" width="445" height="22" alt="">
-            <img class="build__line build__line--bottom" src="assets/build/line-bottom.svg?v=20261019-8" width="445" height="21" alt="">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="trust">
-      <div class="trust__inner">
-        <div class="trust__content">
-          <div class="trust__heading">
-            <div class="trust__titles">
-              <h2 class="trust__title t-h2"><img src="assets/testimonials/verify.svg?v=20261019-8" width="48" height="48" alt="">100% Success Rate</h2>
-              <p class="t-h2">100% Satisfaction Guarantee</p>
-            </div>
-            <p class="trust__sub t-body-m">Built by the Best: AI Engineers You Can Trust</p>
-          </div>
-
-          <div class="trust__logos">
-            <div class="logo-row">
-              <img src="assets/partners/standford.png?v=20261019-8" width="165" height="80" alt="Stanford Medicine">
-              <img src="assets/partners/johnshopkins.png?v=20261019-8" width="165" height="80" alt="Johns Hopkins University">
-              <img src="assets/partners/rady%20childrens.png?v=20261019-8" width="165" height="80" alt="Rady Children's Hospital San Diego">
-              <img src="assets/partners/y%20combinator.png?v=20261019-8" width="165" height="80" alt="Y Combinator">
-            </div>
-            <div class="logo-row">
-              <img src="assets/partners/nvidia.png?v=20261019-8" width="165" height="80" alt="NVIDIA">
-              <img src="assets/partners/intel.png?v=20261019-8" width="165" height="80" alt="Intel">
-              <img src="assets/partners/berkeley.png?v=20261019-8" width="165" height="80" alt="Berkeley, University of California">
-              <img src="assets/partners/sofi.png?v=20261019-8" width="165" height="80" alt="SoFi">
-            </div>
-          </div>
-        </div>
-
-        <div class="security">
-          <div class="security__content">
-            <div class="security__text">
-              <h3 class="t-h5">Enterprise-grade security</h3>
-              <p class="security__desc">Encrypted end to end, with audit trails and source citations.</p>
-            </div>
-            <a class="link link--dark link--gap-7" href="#">
-              <span class="t-body-m btn-label">Trust Center</span>
-              <img src="assets/testimonials/arrow-up-right.svg?v=20261019-8" width="12" height="12" alt="">
-            </a>
-          </div>
-          <div class="security__badges">
-            <img src="assets/testimonials/SO2.png?v=20261019-8" width="90" height="90" alt="SOC 2 Type 2">
-            <img src="assets/testimonials/HIPAA.png?v=20261019-8" width="90" height="90" alt="HIPAA">
-          </div>
-        </div>
-      </div>
+    <!-- Trusted by · logos (508:260) -->
+    <section class="trusted">
+      <p class="trusted__title">Trusted by 15,000+ nonprofits worldwide</p>
+      <ul class="trusted__row">
+        <li class="logo" data-since="Since 2025" style="--slot:.5"><img src="assets/logos/unhcr.png" width="168" height="90" style="--o:.5" alt="UNHCR"></li>
+        <li class="logo" data-since="Since 2025" style="--slot:.4"><img src="assets/logos/one-tree-planted.png" width="174" height="92.8" alt="One Tree Planted"></li>
+        <li class="logo" data-since="Since 2025"><img src="assets/logos/cure.png" width="118" height="63" style="--o:.3" alt="CURE Rare Disease"></li>
+        <li class="logo" data-since="Since 2025"><img src="assets/logos/hudsons-bay-foundation.png" width="142" height="75" style="--o:.5" alt="Hudson's Bay Foundation"></li>
+        <li class="logo" data-since="Since 2025"><img src="assets/logos/unicef.png" width="108" height="58" style="--o:.5" alt="UNICEF"></li>
+        <li class="logo" data-since="Since 2025"><img src="assets/logos/childrens-cancer-fund.png" width="162" height="72" style="--o:.4" alt="Children's Cancer Fund"></li>
+      </ul>
     </section>
 
-    <!-- What is Wedge -->
-    <section class="about">
-      <div class="about__inner">
-        <img class="about__bg" src="assets/about/dots.png?v=20261019-8" alt="">
-        <span class="about__tag tag tag--accent t-tag-m"><span class="tag__dot"></span>what is wedge</span>
-        <p class="about__text t-h2">Wedge is your strategic partner for AI. We <span class="about__muted">take care of <span class="about__underline">full-cycle development, seamless integration, and continuous maintenance</span>. Our AI employees work within your current systems and workflows.</span></p>
-      </div>
-    </section>
-
-    <!-- Proven impact -->
-    <section class="impact">
-      <div class="impact__banner" data-header="light">
-        <div class="impact__top">
-          <span class="tag tag--glass t-tag-m"><span class="tag__dot"></span>Live deployment results</span>
-          <div class="impact__titles">
-            <h2 class="t-h2">Operational work removed. Savings delivered.</h2>
-            <p class="impact__lead t-body-l">In one live Epic deployment, Wedge replaced approximately 85% of manual staff work associated with the medical records workflow and generated $1M+ in savings on release-of-information requests.</p>
+    <!-- Proven at scale (534:10272) -->
+    <section class="proven">
+      <div class="panel">
+        <p class="eyebrow"><img src="assets/icons/eyebrow-target.svg" width="16" height="16" alt="">Proven at scale</p>
+        <div class="panel__quote">
+          <h2 class="panel__title">A modern operations suite to power your entire mission<span class="accent">_</span></h2>
+          <p class="panel__lead">Velora seamlessly connects your fundraising, donor stewardship, and fund accounting into a single workflow.</p>
+        </div>
+        <div class="stats">
+          <div class="stat stat--brand">
+            <img class="stat__glow" src="assets/images/stat-glow.jpg" width="374" height="196" alt="">
+            <div class="stat__head">
+              <span class="stat__icon"><img class="stat__glyph stat__glyph--folder" src="assets/icons/stat-folder-heart.svg" alt=""></span>
+              <p class="stat__label">Nonprofits use<br>Velora’s products</p>
+            </div>
+            <p class="stat__value">15K<span class="stat__plus">+</span></p>
+          </div>
+          <div class="stat">
+            <div class="stat__head">
+              <span class="stat__icon"><img class="stat__glyph stat__glyph--trend" src="assets/icons/stat-trend-up.svg" alt=""></span>
+              <p class="stat__label">Raised through<br>Velora’s tools</p>
+            </div>
+            <p class="stat__value">$9B<span class="stat__plus">+</span></p>
+          </div>
+          <div class="stat">
+            <div class="stat__head">
+              <span class="stat__icon"><img class="stat__glyph stat__glyph--heart" src="assets/icons/stat-heart-half.svg" alt=""></span>
+              <p class="stat__label">Unique donors<br>supported</p>
+            </div>
+            <p class="stat__value">10.5M</p>
           </div>
         </div>
-
-        <div class="impact__stats">
-          <div class="impact__case">
-            <p class="impact__case-label t-tag-l">ONE LIVE EPIC DEPLOYMENT</p>
-            <div class="impact__cards">
-              <div class="impact-card">
-                <div class="impact-card__stat">
-                  <span class="impact-card__value t-h1">~85%</span>
-                  <span class="impact-card__label t-body-m">manual staff work replaced</span>
-                </div>
-                <img class="impact-card__ellipse" src="assets/impact/card-ellipse.svg?v=20261019-8" alt="">
-              </div>
-              <div class="impact-card">
-                <div class="impact-card__stat">
-                  <span class="impact-card__value t-h1">$1M+ saved</span>
-                  <span class="impact-card__label t-body-m">on release-of-information requests.</span>
-                </div>
-                <img class="impact-card__ellipse" src="assets/impact/card-ellipse.svg?v=20261019-8" alt="">
-              </div>
-            </div>
-          </div>
-          <a class="btn btn--white btn--icon" href="#">
-            <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="44" height="44" viewBox="0 0 44 44"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-44)"><rect width="44" height="44" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-            <span class="btn__text">
-              <span class="t-body-m-medium btn-label">Explore the Records Results</span>
-              <img src="assets/common/arrow-right-dark.svg?v=20261019-8" width="12" height="12" alt="">
-            </span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Integrations -->
-    <section class="integrations">
-      <div class="integrations__inner">
-        <div class="integrations__head">
-          <div class="integrations__title">
-            <span class="tag tag--accent t-tag-m"><span class="tag__dot"></span>Built for healthcare operations</span>
-            <h2 class="t-h2">Keep your EHR and portals.<br>Put Wedge to work.</h2>
-          </div>
-          <div class="integrations__text">
-            <p class="t-body-l">Wedge integrates with the systems you already use.<br>Don’t see your system? Contact us, and we’ll build a custom integration for you.</p>
-            <a class="link link--dark link--gap-7" href="#">
-              <span class="t-body-m btn-label">Explore Integrations</span>
-              <img src="assets/common/arrow-right-ink.svg?v=20261019-8" width="12" height="12" alt="">
-            </a>
-          </div>
-        </div>
-
-        <ul class="integrations__grid">
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/epic_Dark.png?v=20261019-8" alt="Epic"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/epic_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/eclinicalworks_Dark.png?v=20261019-8" alt="eClinicalWorks"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/eclinicalworks_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/modmed_Dark.png?v=20261019-8" alt="ModMed"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/modmed_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/nextgen_Dark.png?v=20261019-8" alt="NextGen Healthcare"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/nextgen_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/athenahealth_Dark.png?v=20261019-8" alt="athenahealth"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/athenahealth_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/cerner_Dark.png?v=20261019-8" alt="Cerner"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/cerner_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/cozeva_Dark.png?v=20261019-8" alt="Cozeva"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/cozeva_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/altura_Dark.png?v=20261019-8" alt="Altura"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/altura_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr"><img class="ehr__logo" src="assets/integrations/trizetto_Dark.png?v=20261019-8" alt="TriZetto"><img class="ehr__logo ehr__logo--hover" src="assets/integrations/trizetto_Light.png?v=20261019-8" alt=""></li>
-          <li class="ehr ehr--more"><span>&amp; more</span></li>
-        </ul>
-
-        <div class="roi">
-          <div class="roi__text">
-            <span class="tag tag--accent t-tag-m"><span class="tag__dot"></span>Your workflow economics</span>
-            <div class="roi__copy">
-              <h3 class="t-h4">What could your team get back?</h3>
-              <p class="roi__desc">Use your workflow volume, staff time and labor cost to assess the opportunity.</p>
-            </div>
-          </div>
-          <a class="btn btn--dark btn--icon" href="#contact">
-            <span class="ai-icon" aria-hidden="true"><svg class="ai-icon__bg" width="44" height="44" viewBox="0 0 44 44"><g filter="url(#ai-icon-inset)"><g clip-path="url(#ai-icon-clip-44)"><rect width="44" height="44" rx="4" fill="#105F40"/><g filter="url(#ai-icon-blur)"><ellipse class="ai-icon__glow" cx="76.5" cy="46.5" rx="63.5" ry="18.5" fill="#fff"/></g></g></g></svg><svg class="ai-icon__glyph" width="20" height="20" viewBox="0 0 20 20"><use href="#ai-glyph"/></svg></span>
-            <span class="btn__text">
-              <span class="t-body-m-medium btn-label">Discuss My ROI</span>
-              <img src="assets/integrations/arrow-right-light.svg?v=20261019-8" width="12" height="12" alt="">
-            </span>
-            <span class="btn__glow" aria-hidden="true"><img src="assets/integrations/btn-glow.svg?v=20261019-8" alt=""></span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="faq" id="faq">
-      <div class="faq__inner">
-        <div class="faq__title">
-          <h2 class="faq__heading t-h1">F.A.Q</h2>
-          <p class="faq__sub t-body-s">Start with the workflows, systems and results that matter to your team.</p>
-        </div>
-
-        <div class="faq__list">
-          <div class="faq-item has-answer is-open">
-            <span class="faq-item__num">01</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="true" aria-controls="faq-answer-1">What does Wedge automate?</button>
-              <div class="faq-item__answer" id="faq-answer-1"><div><p>Wedge runs enrollment, referrals and patient access end to end. It also automates records, denials and custom workflows.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">02</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-2">How is Wedge different from an AI receptionist?</button>
-              <div class="faq-item__answer" id="faq-answer-2"><div><p>Wedge coordinates calls with scheduling, verification, registration, forms and follow-up across the workflow.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">03</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-3">Does Wedge integrate with Epic?</button>
-              <div class="faq-item__answer" id="faq-answer-3"><div><p>Yes. Epic is an approved Wedge EHR integration.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">04</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-4">Which EHRs does Wedge support?</button>
-              <div class="faq-item__answer" id="faq-answer-4"><div><p>Epic, Oracle Health / Cerner, athenahealth, eClinicalWorks, NextGen, MEDITECH and ModMed.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">05</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-5">How does Wedge handle HIPAA and patient data?</button>
-              <div class="faq-item__answer" id="faq-answer-5"><div><p>Wedge is HIPAA compliant and SOC 2 Type II certified, with end-to-end encryption, audit trails and source citations.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">06</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-6">Can Wedge automate workflows unique to our organization?</button>
-              <div class="faq-item__answer" id="faq-answer-6"><div><p>Yes. Co-development extends Wedge infrastructure into organization-specific workflows.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">07</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-7">Does Wedge replace staff?</button>
-              <div class="faq-item__answer" id="faq-answer-7"><div><p>Wedge takes operational work off staff. The effect on staffing depends on the workflow and how your organization uses the capacity returned.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">08</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-8">How does Wedge measure ROI?</button>
-              <div class="faq-item__answer" id="faq-answer-8"><div><p>Compare staff handling time, workflow cost and completion against your baseline. Separate labor capacity returned from actual budget savings.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">09</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-9">Can Wedge work across multiple locations?</button>
-              <div class="faq-item__answer" id="faq-answer-9"><div><p>Yes. Wedge technology has been deployed across multiple locations.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-          <div class="faq-item has-answer">
-            <span class="faq-item__num">10</span>
-            <div class="faq-item__body">
-              <button class="faq-item__q" type="button" aria-expanded="false" aria-controls="faq-answer-10">How are actions audited?</button>
-              <div class="faq-item__answer" id="faq-answer-10"><div><p>Wedge provides audit trails and source citations.</p></div></div>
-            </div>
-            <span class="faq-item__icon"></span>
-          </div>
-        </div>
-
-        <div class="faq__aside">
-          <p class="faq__help">Still have questions?<br>Our team is here to help.</p>
-          <a class="link link--dark link--gap-7" href="#contact">
-            <span class="t-body-m btn-label">Book a Demo</span>
-            <img src="assets/common/arrow-right-ink.svg?v=20261019-8" width="12" height="12" alt="">
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta" id="contact">
-      <div class="cta__banner" data-header="light">
-        <div class="cta__main">
-          <div class="cta__title">
-            <p class="cta__eyebrow"><img src="assets/cta/ai.svg?v=20261019-8" width="16" height="16" alt=""><span>Wedge AI <span class="cta__muted">for</span> Healthcare Organizations</span></p>
-            <h2 class="t-h1">Save millions of dollars<br>and hundreds of hours</h2>
-          </div>
-          <a class="big-btn" href="#">
-            <img class="big-btn__avatar" src="assets/cta/avatar.png?v=20261019-8" width="34" height="34" alt="">
-            <span class="big-btn__text">
-              <span class="t-body-m-medium btn-label">Book a Demo Call</span>
-              <span class="big-btn__meta">30 minutes</span>
-            </span>
-            <img class="big-btn__icon" src="assets/cta/icon.png?v=20261019-8" width="28" height="28" alt="">
-          </a>
-        </div>
-        <p class="cta__aside t-body-m">Join other top hospitals, community health centers, health plans, IPAs and multi-physician groups who are automating their entire back office with Wedge AI agents.</p>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <img class="footer__pattern" src="assets/footer/dots2.png?v=20261019-8" alt="">
-
-    <div class="footer__socials">
-      <span class="footer__socials-label">Socials:</span>
-      <a class="footer__social" href="#">LinkedIn</a>
-      <a class="footer__social" href="#">X</a>
-    </div>
-
-    <!-- Comes together from the broken-up logo once the page is scrolled to the end (js/footer-logo.js) -->
-    <div class="footer__wordmark">
-      <img class="footer__wordmark-img" src="assets/footer/logo.png?v=20261019-8" width="1211" height="315" alt="Wedge">
-      <canvas class="footer__wordmark-canvas" data-src="assets/footer/logo-clean.png?v=20261019-8" aria-hidden="true"></canvas>
-    </div>
-
-    <div class="footer__legal">
-      <p class="footer__copy">© 2025 Wedge, Inc. All rights reserved.</p>
-      <div class="footer__links">
-        <span>Cookies Policy</span>
-        <i class="footer__sep" aria-hidden="true"></i>
-        <a href="https://wedge.health/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
-        <i class="footer__sep" aria-hidden="true"></i>
-        <a href="https://wedge.health/terms-of-service" target="_blank" rel="noopener">Terms of Service</a>
-        <i class="footer__sep" aria-hidden="true"></i>
-        <a href="https://wedge.betteruptime.com/" target="_blank" rel="noopener">Product Uptime Status</a>
-      </div>
-    </div>
-
-    <div class="footer__logos">
-      <img src="assets/partners/nvidia.png?v=20261019-8" width="165" height="80" alt="NVIDIA">
-      <img src="assets/partners/standford.png?v=20261019-8" width="165" height="80" alt="Stanford Medicine">
-      <img src="assets/partners/intel.png?v=20261019-8" width="165" height="80" alt="Intel">
-      <img src="assets/partners/y%20combinator.png?v=20261019-8" width="165" height="80" alt="Y Combinator">
-      <img src="assets/partners/sofi.png?v=20261019-8" width="165" height="80" alt="SoFi">
-      <span class="footer__fade footer__fade--left" aria-hidden="true"></span>
-      <span class="footer__fade footer__fade--right" aria-hidden="true"></span>
-    </div>
-  </footer>
-
-  <script src="js/main.js?v=20261019-8" defer></script>
-  <script src="js/footer-logo.js?v=20261019-8" defer></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
