@@ -271,8 +271,8 @@ a { color: inherit; text-decoration: none; }
     inset -2px -1px 4px rgba(240, 106, 143, .75);
 }
 
-/* Primary button motion: a brand-coloured light runs round the edge (thin rim + soft
-   inner glow), and on hover the chevron grows its stem into an arrow. */
+/* Primary button motion on hover: a brand-coloured light runs round the edge (thin rim +
+   soft inner glow), and the chevron grows its stem into an arrow. */
 @property --btn-angle { syntax: '<angle>'; inherits: true; initial-value: 0deg; }
 
 .btn-primary, .cta--primary { position: relative; isolation: isolate; transition: box-shadow .3s ease; }
@@ -283,8 +283,13 @@ a { color: inherit; text-decoration: none; }
   border-radius: inherit;
   overflow: hidden;
   pointer-events: none;
-  animation: btn-spin 5s linear infinite;
+  opacity: 0;
+  animation: btn-spin 5s linear infinite paused;
+  transition: opacity .4s ease;
 }
+/* The running light shows only while the button is hovered or focused */
+a:hover > .btn-fx,
+a:focus-visible > .btn-fx { opacity: 1; animation-play-state: running; }
 .btn-fx__glow { position: absolute; inset: 0; border-radius: inherit; filter: blur(6px); opacity: .6; }
 .btn-fx__glow i,
 .btn-fx__rim {
