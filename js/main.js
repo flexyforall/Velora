@@ -8,10 +8,11 @@
   const easeInOut = (t) => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
   // ---------------------------------------------------------------- Canvas zoom
-  // The hero is a 1440 × 812 canvas; below 1440px it is scaled down as a whole.
+  // The hero is a 1440 × 812 canvas; in a window narrower or shorter than that it is
+  // scaled down as a whole, so the product block never gets cut off at the bottom.
   let zoom = 1;
   function updateZoom() {
-    zoom = Math.min(1, window.innerWidth / DESIGN_W);
+    zoom = Math.min(1, window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
     root.style.setProperty('--zoom', zoom);
     // Canvas px the viewport extends past the canvas (sides on wide screens, bottom on tall ones)
     root.style.setProperty('--bleed', `${Math.max(0, (window.innerWidth / zoom - DESIGN_W) / 2)}px`);
