@@ -31,7 +31,7 @@
   root.style.setProperty('--track', `${TRACK_MORPH + TRACK_SETTLE}px`);
 
   // Floating tags (home-1) head for the dashboard during the first half of the morph,
-  // shrink a little and slip behind the white card, fading out at the end of the trip.
+  // shrink a little and slip behind the white card, turning transparent along the way.
   const floating = [...document.querySelectorAll('.ftag')].map((el) => {
     const ax = parseFloat(el.style.getPropertyValue('--ax'));
     const ay = parseFloat(el.style.getPropertyValue('--ay'));
@@ -49,7 +49,7 @@
       el.style.setProperty('--fx', `${((tx - cx) * e).toFixed(2)}px`);
       el.style.setProperty('--fy', `${((ty - cy) * e).toFixed(2)}px`);
       el.style.setProperty('--fs', (1 - .2 * e).toFixed(4));
-      el.style.setProperty('--fo', (1 - clamp((t - .7) / .3)).toFixed(4));
+      el.style.setProperty('--fo', (1 - clamp((t - .15) / .75)).toFixed(4));
     });
   }
 

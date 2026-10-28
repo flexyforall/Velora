@@ -660,7 +660,7 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 
 /* Floating glass tags (home-1), anchored at the icon's top-left (--ax/--ay inline in
    index.html). While scrolling, main.js moves each tag towards the dashboard and shrinks it
-   (--fx, --fy, --fs) so it slips behind the white card, then fades it out (--fo). */
+   (--fx, --fy, --fs) so it slips behind the white card, fading it out on the way (--fo). */
 .ftags { position: absolute; inset: 0; pointer-events: none; }
 .ftag {
   position: absolute;
