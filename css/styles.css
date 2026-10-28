@@ -841,6 +841,56 @@ a { color: inherit; text-decoration: none; }
 .stat__plus { color: var(--rose); }
 .stat--brand .stat__plus { color: rgba(255, 255, 255, .5); }
 
+/* ------------------------------------------------------------------ Reveal */
+/* Hidden starting states exist only while html.reveal is set (JS on, motion allowed).
+   The hero assembles when the loader leaves (html.is-ready); [data-reveal] blocks
+   appear as they scroll into view (.is-visible, set by main.js). Only opacity,
+   translate, scale and filter animate, so the scroll-driven transforms stay intact. */
+
+.logo__in { display: flex; align-items: center; justify-content: center; max-width: 100%; }
+
+.reveal .header,
+.reveal .hero__rays,
+.reveal .hero__line1,
+.reveal .hero__line2,
+.reveal .hero__sub,
+.reveal .hero__ctas,
+.reveal .product,
+.reveal .product__screen,
+.reveal .tag,
+.reveal [data-reveal] {
+  transition:
+    opacity 1s var(--reveal-ease) var(--d, 0ms),
+    translate 1s var(--reveal-ease) var(--d, 0ms),
+    scale 1.6s var(--reveal-ease) var(--d, 0ms),
+    filter 1s var(--reveal-ease) var(--d, 0ms);
+}
+.reveal { --reveal-ease: cubic-bezier(.16, 1, .3, 1); }
+
+.reveal .hero__line1 { --d: 100ms; }
+.reveal .hero__line2 { --d: 200ms; }
+.reveal .hero__sub { --d: 320ms; }
+.reveal .hero__ctas { --d: 420ms; }
+.reveal .product,
+.reveal .product__screen { --d: 520ms; }
+.reveal .tag:nth-child(1) { --d: 760ms; }
+.reveal .tag:nth-child(2) { --d: 840ms; }
+.reveal .tag:nth-child(3) { --d: 920ms; }
+.reveal .tag:nth-child(4) { --d: 1000ms; }
+.reveal .tag:nth-child(5) { --d: 1080ms; }
+
+.reveal:not(.is-ready) .header { opacity: 0; translate: 0 -16px; }
+.reveal:not(.is-ready) .hero__rays { opacity: 0; scale: 1.06; }
+.reveal:not(.is-ready) .hero__line1,
+.reveal:not(.is-ready) .hero__line2 { opacity: 0; translate: 0 28px; filter: blur(10px); }
+.reveal:not(.is-ready) .hero__sub,
+.reveal:not(.is-ready) .hero__ctas { opacity: 0; translate: 0 28px; }
+.reveal:not(.is-ready) .product,
+.reveal:not(.is-ready) .product__screen { opacity: 0; translate: 0 56px; }
+.reveal:not(.is-ready) .tag { opacity: 0; translate: 0 20px; }
+
+.reveal [data-reveal]:not(.is-visible) { opacity: 0; translate: 0 32px; }
+
 /* ------------------------------------------------------------------ Narrow screens */
 
 @media (max-width: 900px) {

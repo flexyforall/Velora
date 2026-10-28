@@ -8,7 +8,7 @@
   <script>
     // Loader runs only with JS and when motion is allowed (see js/main.js).
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('is-loading');
+      document.documentElement.classList.add('is-loading', 'reveal');
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     }
   </script>
@@ -161,27 +161,27 @@
 
     <!-- Trusted by · logos (508:260) -->
     <section class="trusted">
-      <p class="trusted__title">Trusted by 15,000+ nonprofits worldwide</p>
+      <p class="trusted__title" data-reveal>Trusted by 15,000+ nonprofits worldwide</p>
       <ul class="trusted__row">
-        <li class="logo" data-since="Since 2025" style="--slot:.5"><img src="assets/logos/unhcr.png" width="168" height="90" style="--o:.5" alt="UNHCR"></li>
-        <li class="logo" data-since="Since 2025" style="--slot:.4"><img src="assets/logos/one-tree-planted.png" width="174" height="92.8" alt="One Tree Planted"></li>
-        <li class="logo" data-since="Since 2025"><img src="assets/logos/cure.png" width="118" height="63" style="--o:.3" alt="CURE Rare Disease"></li>
-        <li class="logo" data-since="Since 2025"><img src="assets/logos/hudsons-bay-foundation.png" width="142" height="75" style="--o:.5" alt="Hudson's Bay Foundation"></li>
-        <li class="logo" data-since="Since 2025"><img src="assets/logos/unicef.png" width="108" height="58" style="--o:.5" alt="UNICEF"></li>
-        <li class="logo" data-since="Since 2025"><img src="assets/logos/childrens-cancer-fund.png" width="162" height="72" style="--o:.4" alt="Children's Cancer Fund"></li>
+        <li class="logo" data-since="Since 2025" style="--slot:.5"><span class="logo__in" data-reveal style="--d:120ms"><img src="assets/logos/unhcr.png" width="168" height="90" style="--o:.5" alt="UNHCR"></span></li>
+        <li class="logo" data-since="Since 2025" style="--slot:.4"><span class="logo__in" data-reveal style="--d:200ms"><img src="assets/logos/one-tree-planted.png" width="174" height="92.8" alt="One Tree Planted"></span></li>
+        <li class="logo" data-since="Since 2025"><span class="logo__in" data-reveal style="--d:280ms"><img src="assets/logos/cure.png" width="118" height="63" style="--o:.3" alt="CURE Rare Disease"></span></li>
+        <li class="logo" data-since="Since 2025"><span class="logo__in" data-reveal style="--d:360ms"><img src="assets/logos/hudsons-bay-foundation.png" width="142" height="75" style="--o:.5" alt="Hudson's Bay Foundation"></span></li>
+        <li class="logo" data-since="Since 2025"><span class="logo__in" data-reveal style="--d:440ms"><img src="assets/logos/unicef.png" width="108" height="58" style="--o:.5" alt="UNICEF"></span></li>
+        <li class="logo" data-since="Since 2025"><span class="logo__in" data-reveal style="--d:520ms"><img src="assets/logos/childrens-cancer-fund.png" width="162" height="72" style="--o:.4" alt="Children's Cancer Fund"></span></li>
       </ul>
     </section>
 
     <!-- Proven at scale (534:10272) -->
     <section class="proven">
-      <div class="panel">
-        <p class="eyebrow"><img src="assets/icons/eyebrow-target.svg" width="16" height="16" alt="">Proven at scale</p>
+      <div class="panel" data-reveal>
+        <p class="eyebrow" data-reveal style="--d:120ms"><img src="assets/icons/eyebrow-target.svg" width="16" height="16" alt="">Proven at scale</p>
         <div class="panel__quote">
-          <h2 class="panel__title">A modern operations suite to power your entire mission<span class="accent">_</span></h2>
-          <p class="panel__lead">Velora seamlessly connects your fundraising, donor stewardship, and fund accounting into a single workflow.</p>
+          <h2 class="panel__title" data-reveal style="--d:200ms">A modern operations suite to power your entire mission<span class="accent">_</span></h2>
+          <p class="panel__lead" data-reveal style="--d:320ms">Velora seamlessly connects your fundraising, donor stewardship, and fund accounting into a single workflow.</p>
         </div>
         <div class="stats">
-          <div class="stat stat--brand">
+          <div class="stat stat--brand" data-reveal style="--d:400ms">
             <img class="stat__glow" src="assets/images/stat-glow.jpg" width="374" height="196" alt="">
             <div class="stat__head">
               <span class="stat__icon"><img class="stat__glyph stat__glyph--folder" src="assets/icons/stat-folder-heart.svg" alt=""></span>
@@ -189,14 +189,14 @@
             </div>
             <p class="stat__value">15K<span class="stat__plus">+</span></p>
           </div>
-          <div class="stat">
+          <div class="stat" data-reveal style="--d:480ms">
             <div class="stat__head">
               <span class="stat__icon"><img class="stat__glyph stat__glyph--trend" src="assets/icons/stat-trend-up.svg" alt=""></span>
               <p class="stat__label">Raised through<br>Velora’s tools</p>
             </div>
             <p class="stat__value">$9B<span class="stat__plus">+</span></p>
           </div>
-          <div class="stat">
+          <div class="stat" data-reveal style="--d:560ms">
             <div class="stat__head">
               <span class="stat__icon"><img class="stat__glyph stat__glyph--heart" src="assets/icons/stat-heart-half.svg" alt=""></span>
               <p class="stat__label">Unique donors<br>supported</p>

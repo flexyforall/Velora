@@ -67,6 +67,18 @@
     });
   });
 
+  // ---------------------------------------------------------------- Reveal on scroll
+  if (root.classList.contains('reveal')) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -5% 0px' });
+    document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+  }
+
   // ---------------------------------------------------------------- Loader
   if (!root.classList.contains('is-loading')) return;
 
@@ -116,6 +128,7 @@
       setTimeout(() => {
         loader.classList.add('is-leaving');
         root.classList.remove('is-loading');
+        root.classList.add('is-ready'); // hero assembles while the loader fades out
       }, 250);
     }
   }
