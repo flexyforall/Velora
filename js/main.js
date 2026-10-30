@@ -40,17 +40,21 @@
     return { el, x: v('--x'), y: v('--y'), s: v('--s'), g: v('--g'), bx: parseFloat(el.dataset.bx) };
   });
   // They rise faster than they gather in (ease-out on y, ease-in-out on x), so they pass
-  // above the opening dashboard instead of across it.
+  // above the opening dashboard instead of across it, but never above the bottom of the
+  // hero buttons (+16px): they follow the buttons up instead of crossing them.
+  const CTA_BOTTOM = 495;               // canvas y of the buttons' bottom edge in home-1
+  const COPY_SHIFT = 485;               // how far the copy block travels up (css: .hero__copy)
   function moveFlies(p) {
     const t = clamp(p / .9);
     const ex = easeInOut(t);
     const ey = 1 - Math.pow(1 - t, 2.4);
-    const lerp = (a, b, e) => (a + (b - a) * e).toFixed(2);
+    const floor = CTA_BOTTOM - COPY_SHIFT * p + 16;
+    const lerp = (a, b, e) => (a + (b - a) * e);
     flies.forEach((f) => {
-      f.el.style.setProperty('--x', lerp(f.x, f.bx, ex));
-      f.el.style.setProperty('--y', lerp(f.y, SLOT.y, ey));
-      f.el.style.setProperty('--s', lerp(f.s, SLOT.s, ex));
-      f.el.style.setProperty('--g', lerp(f.g, SLOT.g, ex));
+      f.el.style.setProperty('--x', lerp(f.x, f.bx, ex).toFixed(2));
+      f.el.style.setProperty('--y', Math.max(lerp(f.y, SLOT.y, ey), floor).toFixed(2));
+      f.el.style.setProperty('--s', lerp(f.s, SLOT.s, ex).toFixed(2));
+      f.el.style.setProperty('--g', lerp(f.g, SLOT.g, ex).toFixed(2));
     });
   }
 
