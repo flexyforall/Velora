@@ -710,17 +710,18 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
 .fly .tile { --s: inherit; --g: inherit; }
 .hero.is-tabs .fly { visibility: hidden; }
 
-/* Product switcher (643:15716): centred, 128px from the top. The active product shows its
-   name on a glass tile with a notch down to the dashboard; the others are icon-only. */
+/* Product switcher (643:15716): 128px from the top, left edge at 499px (centred with
+   Fundraising open). The active product shows its name on a glass tile with a notch down to
+   the dashboard; the others are icon-only. It is left-anchored so that, when the first tile
+   opens, that icon stays put and the others move right. */
 .switcher {
   --sw: clamp(0, (var(--p) - .8) / .17, 1);
   position: absolute;
-  left: 720px;
+  left: 499px;
   top: 128px;
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  transform: translateX(-50%);
   opacity: var(--sw);
 }
 .hero:not(.is-tabs) .switcher { pointer-events: none; }
@@ -789,12 +790,19 @@ a:focus-visible > .btn-arrow .btn-arrow__stem {
   width: 46px;
   height: 12px;
   opacity: 0;
-  transition: opacity .3s ease;
+  scale: 1 0;
+  transform-origin: 50% 0;
+  transition: opacity .2s ease, scale .2s ease;
   pointer-events: none;
 }
 .sw__notch i { position: relative; flex: none; width: 12px; height: 46px; transform: rotate(-90deg); }
 .sw__notch img { position: absolute; left: -20px; top: -20px; width: 52px; height: 86px; max-width: none; }
-.sw.is-active .sw__notch { opacity: 1; }
+/* The notch comes last: it drops down once the name has opened */
+.sw.is-active .sw__notch {
+  opacity: 1;
+  scale: 1 1;
+  transition: opacity .3s ease .45s, scale .35s cubic-bezier(.33, 1, .68, 1) .45s;
+}
 
 /* ------------------------------------------------------------------ Trusted by (508:260) */
 

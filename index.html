@@ -15,7 +15,7 @@
   <link rel="preload" href="assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-300-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/newsreader-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css?v=20261030-1">
+  <link rel="stylesheet" href="css/styles.css?v=20261030-2">
 </head>
 <body>
 
@@ -65,9 +65,10 @@
 
           <div class="product" id="product"></div>
 
-          <!-- Product switcher (home-2): sits above the dashboard; the active product shows its name -->
+          <!-- Product switcher (home-2): sits above the dashboard; the active product shows its name.
+               Starts as a compact row of icons; main.js then opens Fundraising. -->
           <div class="switcher" role="tablist" aria-label="Velora products">
-            <button class="sw is-active" type="button" role="tab" aria-selected="true" aria-label="Fundraising">
+            <button class="sw" type="button" role="tab" aria-selected="false" aria-label="Fundraising">
               <span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span></span>
               <span class="sw__label"><span class="sw__clip"><span class="sw__name">Fundraising</span></span></span>
               <span class="sw__notch" aria-hidden="true"><i><img src="assets/icons/switcher-notch.svg" alt=""></i></span>
@@ -97,10 +98,10 @@
           <!-- Product icons (home-1) that fly into the switcher while the dashboard opens -->
           <div class="flies" aria-hidden="true">
             <span class="fly" style="--x:254; --y:566; --s:64; --g:40" data-bx="503"><span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span></span></span>
-            <span class="fly" style="--x:131; --y:649; --s:58; --g:30" data-bx="681"><span class="tile" style="--c1:#18597e; --c2:#2f667a"><span class="tile__g"><img class="g--full" src="assets/icons/tag-fund-accounting.svg" alt=""></span></span></span>
-            <span class="fly" style="--x:297; --y:723; --s:50; --g:22" data-bx="749"><span class="tile" style="--c1:#814dc8; --c2:#aa3dc5"><span class="tile__g"><img class="g--full" src="assets/icons/tag-mission-assistant.svg" alt=""></span></span></span>
-            <span class="fly" style="--x:1156.5; --y:596; --s:48; --g:24" data-bx="817"><span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--donor" src="assets/icons/tag-donor-management.svg" alt=""></span></span></span>
-            <span class="fly" style="--x:1217.5; --y:686; --s:57; --g:29" data-bx="885"><span class="tile" style="--c1:#1c5838; --c2:#4da139"><span class="tile__g"><img class="g--grant" src="assets/icons/tag-grant-management.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:131; --y:649; --s:58; --g:30" data-bx="571"><span class="tile" style="--c1:#18597e; --c2:#2f667a"><span class="tile__g"><img class="g--full" src="assets/icons/tag-fund-accounting.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:297; --y:723; --s:50; --g:22" data-bx="639"><span class="tile" style="--c1:#814dc8; --c2:#aa3dc5"><span class="tile__g"><img class="g--full" src="assets/icons/tag-mission-assistant.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:1156.5; --y:596; --s:48; --g:24" data-bx="707"><span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--donor" src="assets/icons/tag-donor-management.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:1217.5; --y:686; --s:57; --g:29" data-bx="775"><span class="tile" style="--c1:#1c5838; --c2:#4da139"><span class="tile__g"><img class="g--grant" src="assets/icons/tag-grant-management.svg" alt=""></span></span></span>
           </div>
 
           <!-- Dashboard -->
@@ -202,6 +203,6 @@
     </section>
   </main>
 
-  <script src="js/main.js?v=20261030-1"></script>
+  <script src="js/main.js?v=20261030-2"></script>
 </body>
 </html>

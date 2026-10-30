@@ -31,8 +31,9 @@
   root.style.setProperty('--track', `${TRACK_MORPH + TRACK_HOLD}px`);
 
   // Product icons fly from their home-1 spots into the switcher (home-2): 52px tiles with a
-  // 24px glyph, 132px from the top. They land at 90% of the morph and hand over to the
-  // switcher's own tiles once it is settled.
+  // 24px glyph, 132px from the top, lined up as a compact row (no name shown yet). They land
+  // at 90% of the morph and hand over to the switcher's own tiles once it is settled; then
+  // the first tile opens (name, then the notch down to the dashboard).
   const SLOT = { y: 132, s: 52, g: 24 };
   const flies = [...document.querySelectorAll('.fly')].map((el) => {
     const v = (name) => parseFloat(el.style.getPropertyValue(name));
@@ -54,7 +55,7 @@
   }
 
   const products = [...document.querySelectorAll('.sw')];
-  function activate(btn) {
+  function activate(btn) {     // btn = null closes them all (compact row)
     products.forEach((b) => {
       const on = b === btn;
       b.classList.toggle('is-active', on);
@@ -62,6 +63,7 @@
     });
   }
 
+  let opening = null;
   let ticking = false;
   function render() {
     ticking = false;
@@ -71,9 +73,17 @@
     moveFlies(p);
     hero.classList.toggle('is-open', p > .97);   // dashboard fully open: show the bookkeeping column
     const settled = p > .999;
-    // The icons fly to the Fundraising layout, so the switcher starts from it again
-    if (!settled && hero.classList.contains('is-tabs')) activate(products[0]);
+    const was = hero.classList.contains('is-tabs');
     hero.classList.toggle('is-tabs', settled);
+    if (settled && !was) {
+      // Icons are in line: open the first product a moment later
+      clearTimeout(opening);
+      opening = setTimeout(() => { if (hero.classList.contains('is-tabs')) activate(products[0]); restartCycle(); }, 250);
+    } else if (!settled && was) {
+      // Back to the compact row the icons fly into
+      clearTimeout(opening);
+      activate(null);
+    }
   }
   function requestRender() {
     if (!ticking) {
@@ -96,6 +106,7 @@
     cycle = setInterval(() => {
       if (!hero.classList.contains('is-tabs') || switcher.matches(':hover')) return;
       const i = products.findIndex((b) => b.classList.contains('is-active'));
+      if (i < 0) return;
       activate(products[(i + 1) % products.length]);
     }, CYCLE);
   }
