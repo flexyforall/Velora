@@ -14,7 +14,8 @@
   </script>
   <link rel="preload" href="assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-300-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css?v=20261028-7">
+  <link rel="preload" href="assets/fonts/newsreader-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css?v=20261030-1">
 </head>
 <body>
 
@@ -62,67 +63,47 @@
           <div class="hero__fade" id="hero-fade"></div>
           <img class="hero__glow" id="hero-glow" src="assets/images/hero-glow.svg" width="328" height="138" alt="">
 
-          <div class="product" id="product">
-            <!-- Tab row (home-2): part of the block, appears on its own near the end of the scroll -->
-            <div class="tabs" role="tablist" aria-label="Velora products">
-              <button class="tab is-active" type="button" role="tab" aria-selected="true" style="--c:#e55a7f">
-                <span class="tab__line"><span class="tab__bar"></span></span>
-                <span class="tag-icon"><img class="tag__glyph tag__glyph--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span>
-                <span class="tab__label">Fundraising</span>
-              </button>
-              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#18597e">
-                <span class="tab__line"><span class="tab__bar"></span></span>
-                <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-fund-accounting.svg" alt=""></span>
-                <span class="tab__label">Fund Accounting</span>
-              </button>
-              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#e55a7f">
-                <span class="tab__line"><span class="tab__bar"></span></span>
-                <span class="tag-icon"><img class="tag__glyph tag__glyph--donor" src="assets/icons/tag-donor-management.svg" alt=""></span>
-                <span class="tab__label">Donor Management</span>
-              </button>
-              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#2f744f">
-                <span class="tab__line"><span class="tab__bar"></span></span>
-                <span class="tag-icon"><img class="tag__glyph tag__glyph--grant" src="assets/icons/tag-grant-management.svg" alt=""></span>
-                <span class="tab__label">Grant Management</span>
-              </button>
-              <button class="tab" type="button" role="tab" aria-selected="false" style="--c:#814dc8">
-                <span class="tab__line"><span class="tab__bar"></span></span>
-                <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-mission-assistant.svg" alt=""></span>
-                <span class="tab__label">Mission Assistant</span>
-              </button>
-            </div>
+          <div class="product" id="product"></div>
+
+          <!-- Product switcher (home-2): sits above the dashboard; the active product shows its name -->
+          <div class="switcher" role="tablist" aria-label="Velora products">
+            <button class="sw is-active" type="button" role="tab" aria-selected="true" aria-label="Fundraising">
+              <span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span></span>
+              <span class="sw__label"><span class="sw__clip"><span class="sw__name">Fundraising</span></span></span>
+              <span class="sw__notch" aria-hidden="true"><i><img src="assets/icons/switcher-notch.svg" alt=""></i></span>
+            </button>
+            <button class="sw" type="button" role="tab" aria-selected="false" aria-label="Fund Accounting">
+              <span class="tile" style="--c1:#18597e; --c2:#2f667a"><span class="tile__g"><img class="g--full" src="assets/icons/tag-fund-accounting.svg" alt=""></span></span>
+              <span class="sw__label"><span class="sw__clip"><span class="sw__name">Fund Accounting</span></span></span>
+              <span class="sw__notch" aria-hidden="true"><i><img src="assets/icons/switcher-notch.svg" alt=""></i></span>
+            </button>
+            <button class="sw" type="button" role="tab" aria-selected="false" aria-label="Mission Assistant">
+              <span class="tile" style="--c1:#814dc8; --c2:#aa3dc5"><span class="tile__g"><img class="g--full" src="assets/icons/tag-mission-assistant.svg" alt=""></span></span>
+              <span class="sw__label"><span class="sw__clip"><span class="sw__name">Mission Assistant</span></span></span>
+              <span class="sw__notch" aria-hidden="true"><i><img src="assets/icons/switcher-notch.svg" alt=""></i></span>
+            </button>
+            <button class="sw" type="button" role="tab" aria-selected="false" aria-label="Donor Management">
+              <span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--donor" src="assets/icons/tag-donor-management.svg" alt=""></span></span>
+              <span class="sw__label"><span class="sw__clip"><span class="sw__name">Donor Management</span></span></span>
+              <span class="sw__notch" aria-hidden="true"><i><img src="assets/icons/switcher-notch.svg" alt=""></i></span>
+            </button>
+            <button class="sw" type="button" role="tab" aria-selected="false" aria-label="Grant Management">
+              <span class="tile" style="--c1:#1c5838; --c2:#4da139"><span class="tile__g"><img class="g--grant" src="assets/icons/tag-grant-management.svg" alt=""></span></span>
+              <span class="sw__label"><span class="sw__clip"><span class="sw__name">Grant Management</span></span></span>
+              <span class="sw__notch" aria-hidden="true"><i><img src="assets/icons/switcher-notch.svg" alt=""></i></span>
+            </button>
           </div>
 
-          <!-- Floating glass tags (home-1): drift into the dashboard and disappear behind it -->
-          <div class="ftags" aria-hidden="true">
-            <span class="ftag ftag--bright" style="--c:#e55a7f; --ax:205; --ay:570; --aw:152">
-              <span class="ftag__pill"></span>
-              <span class="tag-icon"><img class="tag__glyph tag__glyph--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span>
-              <span class="ftag__label">Fundraising</span>
-            </span>
-            <span class="ftag" style="--c:#18597e; --ax:70; --ay:653; --aw:191">
-              <span class="ftag__pill"></span>
-              <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-fund-accounting.svg" alt=""></span>
-              <span class="ftag__label">Fund Accounting</span>
-            </span>
-            <span class="ftag" style="--c:#e55a7f; --ax:1084; --ay:600; --aw:212">
-              <span class="ftag__pill"></span>
-              <span class="tag-icon"><img class="tag__glyph tag__glyph--donor" src="assets/icons/tag-donor-management.svg" alt=""></span>
-              <span class="ftag__label">Donor Management</span>
-            </span>
-            <span class="ftag" style="--c:#2f744f; --ax:1147; --ay:690; --aw:209">
-              <span class="ftag__pill"></span>
-              <span class="tag-icon"><img class="tag__glyph tag__glyph--grant" src="assets/icons/tag-grant-management.svg" alt=""></span>
-              <span class="ftag__label">Grant Management</span>
-            </span>
-            <span class="ftag" style="--c:#814dc8; --ax:230; --ay:734; --aw:197">
-              <span class="ftag__pill"></span>
-              <span class="tag-icon"><img class="tag__glyph" src="assets/icons/tag-mission-assistant.svg" alt=""></span>
-              <span class="ftag__label">Mission Assistant</span>
-            </span>
+          <!-- Product icons (home-1) that fly into the switcher while the dashboard opens -->
+          <div class="flies" aria-hidden="true">
+            <span class="fly" style="--x:254; --y:566; --s:64; --g:40" data-bx="503"><span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--fundraising" src="assets/icons/tag-fundraising.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:131; --y:649; --s:58; --g:30" data-bx="681"><span class="tile" style="--c1:#18597e; --c2:#2f667a"><span class="tile__g"><img class="g--full" src="assets/icons/tag-fund-accounting.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:297; --y:723; --s:50; --g:22" data-bx="749"><span class="tile" style="--c1:#814dc8; --c2:#aa3dc5"><span class="tile__g"><img class="g--full" src="assets/icons/tag-mission-assistant.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:1156.5; --y:596; --s:48; --g:24" data-bx="817"><span class="tile" style="--c1:#e65946; --c2:#e55a7f"><span class="tile__g"><img class="g--donor" src="assets/icons/tag-donor-management.svg" alt=""></span></span></span>
+            <span class="fly" style="--x:1217.5; --y:686; --s:57; --g:29" data-bx="885"><span class="tile" style="--c1:#1c5838; --c2:#4da139"><span class="tile__g"><img class="g--grant" src="assets/icons/tag-grant-management.svg" alt=""></span></span></span>
           </div>
 
-          <!-- Dashboard sits above the floating tags, so they slip in behind it -->
+          <!-- Dashboard -->
           <div class="product__screen" id="product-screen">
             <div class="card card--revenue">
               <div class="card__head">
@@ -170,7 +151,7 @@
             <div class="hero__text">
               <h1 class="hero__title">
                 <span class="hero__line1">Do more good</span>
-                <span class="hero__line2">with what you have.</span>
+                <span class="hero__line2">with <em class="hero__accent">what</em> you have.</span>
               </h1>
               <p class="hero__sub">Automate workflows, strengthen donor stewardship, and simplify fund accounting with tools built for how nonprofits actually work.</p>
             </div>
@@ -196,42 +177,31 @@
       </ul>
     </section>
 
-    <!-- Proven at scale (534:10272) -->
+    <!-- Proven at scale (534:10272 / 656:20978) -->
     <section class="proven">
       <div class="panel">
-        <p class="eyebrow"><img src="assets/icons/eyebrow-target.svg" width="16" height="16" alt="">Proven at scale</p>
-        <div class="panel__quote">
-          <h2 class="panel__title">A modern operations suite to power your entire mission<span class="accent">_</span></h2>
-          <p class="panel__lead">Velora seamlessly connects your fundraising, donor stewardship, and fund accounting into a single workflow.</p>
+        <img class="panel__ray" src="assets/images/proven-ray.png" width="1392" height="526" alt="">
+        <div class="panel__head">
+          <p class="eyebrow"><img src="assets/icons/eyebrow-target.svg" width="16" height="16" alt="">Proven at scale</p>
+          <div class="panel__quote">
+            <h2 class="panel__title">A modern operations suite to power your entire mission<span class="accent">_</span></h2>
+            <p class="panel__lead">Velora seamlessly connects your fundraising, donor stewardship, and fund accounting into a single workflow.</p>
+          </div>
         </div>
         <div class="stats">
-          <div class="stat stat--brand" data-reveal>
-            <img class="stat__glow" src="assets/images/stat-glow.jpg" width="374" height="196" alt="">
-            <div class="stat__head">
-              <span class="stat__icon"><img class="stat__glyph stat__glyph--folder" src="assets/icons/stat-folder-heart.svg" alt=""></span>
-              <p class="stat__label">Nonprofits use<br>Velora’s products</p>
-            </div>
-            <p class="stat__value">15K<span class="stat__plus">+</span></p>
+          <div class="stat-main">
+            <p class="stat-main__value">15<span class="stat-main__unit">k+</span></p>
+            <p class="stat-main__label">Nonprofits use Velora’s products</p>
           </div>
-          <div class="stat" data-reveal>
-            <div class="stat__head">
-              <span class="stat__icon"><img class="stat__glyph stat__glyph--trend" src="assets/icons/stat-trend-up.svg" alt=""></span>
-              <p class="stat__label">Raised through<br>Velora’s tools</p>
-            </div>
-            <p class="stat__value">$9B<span class="stat__plus">+</span></p>
-          </div>
-          <div class="stat" data-reveal>
-            <div class="stat__head">
-              <span class="stat__icon"><img class="stat__glyph stat__glyph--heart" src="assets/icons/stat-heart-half.svg" alt=""></span>
-              <p class="stat__label">Unique donors<br>supported</p>
-            </div>
-            <p class="stat__value">10.5M</p>
+          <div class="stat-list">
+            <p class="stat"><span class="stat__value">$9<span class="stat__unit">b</span><span class="stat__unit accent">+</span></span><span class="stat__label">Raised through Velora’s tools</span></p>
+            <p class="stat"><span class="stat__value">10.5<span class="stat__unit">m</span></span><span class="stat__label">Unique donors supported</span></p>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="js/main.js?v=20261028-7"></script>
+  <script src="js/main.js?v=20261030-1"></script>
 </body>
 </html>

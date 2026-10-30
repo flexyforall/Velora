@@ -1,4 +1,4 @@
-// Velora — loader, scroll-driven hero animation and product tabs.
+// Velora — loader, scroll-driven hero animation and product switcher.
 (() => {
   const root = document.documentElement;
   const DESIGN_W = 1440;
@@ -22,34 +22,43 @@
   updateZoom();
 
   // ---------------------------------------------------------------- Hero scroll
-  // Scroll distance (design px) for home-1 → home-2, then home-2 → home-3 (product settles 63.5px higher).
+  // Scroll distance (design px) for home-1 → home-2, then a short hold on home-2.
   const TRACK_MORPH = 900;
-  const TRACK_SETTLE = 160;
+  const TRACK_HOLD = 160;
 
   const hero = document.getElementById('hero');
   hero.classList.add('hero--animated');
-  root.style.setProperty('--track', `${TRACK_MORPH + TRACK_SETTLE}px`);
+  root.style.setProperty('--track', `${TRACK_MORPH + TRACK_HOLD}px`);
 
-  // Floating tags (home-1) head for the dashboard during the first half of the morph,
-  // shrink a little and slip behind the white card, turning transparent along the way.
-  const floating = [...document.querySelectorAll('.ftag')].map((el) => {
-    const ax = parseFloat(el.style.getPropertyValue('--ax'));
-    const ay = parseFloat(el.style.getPropertyValue('--ay'));
-    const aw = parseFloat(el.style.getPropertyValue('--aw'));
-    return { el, cx: ax - 7 + aw / 2, cy: ay - 7 + 23 };
+  // Product icons fly from their home-1 spots into the switcher (home-2): 52px tiles with a
+  // 24px glyph, 132px from the top. They land at 90% of the morph and hand over to the
+  // switcher's own tiles once it is settled.
+  const SLOT = { y: 132, s: 52, g: 24 };
+  const flies = [...document.querySelectorAll('.fly')].map((el) => {
+    const v = (name) => parseFloat(el.style.getPropertyValue(name));
+    return { el, x: v('--x'), y: v('--y'), s: v('--s'), g: v('--g'), bx: parseFloat(el.dataset.bx) };
   });
-  function moveFloating(p) {
-    const t = clamp(p / .5);
-    const e = easeInOut(t);
-    const sx = 720 + .5 * p;            // centre of the white card at this point of the morph
-    const sy = 878.5 - 446.5 * p;
-    floating.forEach(({ el, cx, cy }) => {
-      const tx = sx + (cx - 720) * .3;
-      const ty = sy + (cy - 650) * .3;
-      el.style.setProperty('--fx', `${((tx - cx) * e).toFixed(2)}px`);
-      el.style.setProperty('--fy', `${((ty - cy) * e).toFixed(2)}px`);
-      el.style.setProperty('--fs', (1 - .2 * e).toFixed(4));
-      el.style.setProperty('--fo', (1 - clamp((t - .15) / .75)).toFixed(4));
+  // They rise faster than they gather in (ease-out on y, ease-in-out on x), so they pass
+  // above the opening dashboard instead of across it.
+  function moveFlies(p) {
+    const t = clamp(p / .9);
+    const ex = easeInOut(t);
+    const ey = 1 - Math.pow(1 - t, 2.4);
+    const lerp = (a, b, e) => (a + (b - a) * e).toFixed(2);
+    flies.forEach((f) => {
+      f.el.style.setProperty('--x', lerp(f.x, f.bx, ex));
+      f.el.style.setProperty('--y', lerp(f.y, SLOT.y, ey));
+      f.el.style.setProperty('--s', lerp(f.s, SLOT.s, ex));
+      f.el.style.setProperty('--g', lerp(f.g, SLOT.g, ex));
+    });
+  }
+
+  const products = [...document.querySelectorAll('.sw')];
+  function activate(btn) {
+    products.forEach((b) => {
+      const on = b === btn;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', String(on));
     });
   }
 
@@ -58,12 +67,13 @@
     ticking = false;
     const scrolled = -hero.getBoundingClientRect().top / zoom;
     const p = easeInOut(clamp(scrolled / TRACK_MORPH));
-    const q = clamp((scrolled - TRACK_MORPH) / TRACK_SETTLE);
     root.style.setProperty('--p', p.toFixed(4));
-    root.style.setProperty('--q', q.toFixed(4));
-    moveFloating(p);
+    moveFlies(p);
     hero.classList.toggle('is-open', p > .97);   // dashboard fully open: show the bookkeeping column
-    hero.classList.toggle('is-tabs', p > .999);
+    const settled = p > .999;
+    // The icons fly to the Fundraising layout, so the switcher starts from it again
+    if (!settled && hero.classList.contains('is-tabs')) activate(products[0]);
+    hero.classList.toggle('is-tabs', settled);
   }
   function requestRender() {
     if (!ticking) {
@@ -75,22 +85,22 @@
   window.addEventListener('resize', () => { updateZoom(); requestRender(); });
   render();
 
-  // ---------------------------------------------------------------- Product tabs
-  // Once the tab row has appeared (home-2), the active tab cycles.
-  const tabs = [...document.querySelectorAll('.tab')];
-  function activate(tab) {
-    tabs.forEach((t) => {
-      const on = t === tab;
-      t.classList.toggle('is-active', on);
-      t.setAttribute('aria-selected', String(on));
-    });
+  // ---------------------------------------------------------------- Product switcher
+  // Once settled on home-2 the active product moves on every 6s (paused while hovered);
+  // a click picks one and restarts the count.
+  const switcher = document.querySelector('.switcher');
+  const CYCLE = 6000;
+  let cycle = null;
+  function restartCycle() {
+    clearInterval(cycle);
+    cycle = setInterval(() => {
+      if (!hero.classList.contains('is-tabs') || switcher.matches(':hover')) return;
+      const i = products.findIndex((b) => b.classList.contains('is-active'));
+      activate(products[(i + 1) % products.length]);
+    }, CYCLE);
   }
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => activate(tab));
-    tab.querySelector('.tab__bar').addEventListener('animationend', () => {
-      activate(tabs[(i + 1) % tabs.length]);
-    });
-  });
+  products.forEach((btn) => btn.addEventListener('click', () => { activate(btn); restartCycle(); }));
+  restartCycle();
 
   // ---------------------------------------------------------------- Reveal on scroll
   if (root.classList.contains('reveal')) {

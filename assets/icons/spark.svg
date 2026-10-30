@@ -1,9 +1,9 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Frame" clip-path="url(#clip0_0_26)">
-<path id="Vector" d="M7 1.5L8.2 5.8L12.5 7L8.2 8.2L7 12.5L5.8 8.2L1.5 7L5.8 5.8L7 1.5Z" stroke-width="1.2" stroke="white"/>
+<g id="Frame" clip-path="url(#clip0_0_14)">
+<path id="Vector" d="M7 1.5L8.2 5.8L12.5 7L8.2 8.2L7 12.5L5.8 8.2L1.5 7L5.8 5.8L7 1.5Z" stroke-width="1.2" stroke="#E55A7F"/>
 </g>
 <defs>
-<clipPath id="clip0_0_26">
+<clipPath id="clip0_0_14">
 <rect width="14" height="14" fill="white"/>
 </clipPath>
 </defs>
